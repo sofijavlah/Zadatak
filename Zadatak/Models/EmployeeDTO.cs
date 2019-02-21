@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 namespace Zadatak.Models
 {
-    public class Office
+    public class EmployeeDTO
     {
         public long Id { get; set; }
 
-        public string Description { get; set; }
+        public string FName { get; set; }
 
-        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public string LName { get; set; }
+
+        
     }
 }

@@ -5,12 +5,10 @@ using System.Threading.Tasks;
 
 namespace Zadatak.Models
 {
-    public class Office
+    public class DeviceDTO
     {
         public long Id { get; set; }
 
-        public string Description { get; set; }
-
-        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public string Name { get; set; }
     }
 }
