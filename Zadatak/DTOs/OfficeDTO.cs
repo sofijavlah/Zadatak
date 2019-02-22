@@ -7,16 +7,13 @@ namespace Zadatak.Models
 {
     public class OfficeDTO
     {
-        public long Id { get; set; }
+        //public long Id { get; set; }
 
-        public string Description { get; set; }
-
+        public string OfficeName { get; set; }
         
-
         public OfficeDTO(Office o)
         {
-            Id = o.Id;
-            Description = o.Description;
+            OfficeName = o.Description;
         }
 
     }

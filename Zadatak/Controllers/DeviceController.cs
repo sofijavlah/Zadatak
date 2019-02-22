@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Zadatak.Models;
 
 namespace Zadatak.Controllers
 {
@@ -11,6 +12,15 @@ namespace Zadatak.Controllers
     [ApiController]
     public class DeviceController : ControllerBase
     {
+
+        private readonly WorkContext context;
+
+        public DeviceController(WorkContext _context)
+        {
+            context = _context;
+            context.SaveChanges();
+        }
+
         // GET: api/Device
         [HttpGet]
         public IEnumerable<string> Get()
@@ -19,7 +29,7 @@ namespace Zadatak.Controllers
         }
 
         // GET: api/Device/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";

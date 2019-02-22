@@ -15,7 +15,9 @@ namespace Zadatak.Models
             : base(options)
         {
             this.ho = ho;
+            
         }
+
 
         public DbSet<Office> Offices { get; set; }
         public DbSet<Employee> Employees { get; set; }

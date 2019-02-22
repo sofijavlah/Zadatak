@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace Zadatak.Models
         public Office Office { get; set; }
 
         public List<Device> Devices { get; set; } = new List<Device>();
+
+        
 
     }
 }

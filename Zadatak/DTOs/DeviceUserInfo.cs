@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Zadatak.Models
+namespace Zadatak.DTOs
 {
-    public class DeviceDTO
+    public class DeviceUserInfo
     {
-        public long Id { get; set; }
-
         public string Name { get; set; }
+
+        public string User { get; set; }
     }
 }
