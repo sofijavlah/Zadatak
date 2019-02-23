@@ -52,7 +52,7 @@ namespace Zadatak.Controllers
                 EmployeeList = l.Employees.Select(e => new EmployeeDTO
                 {
                     FName = e.FirstName,
-                    LName = e.FirstName
+                    LName = e.LastName
                 })
             });
             
@@ -63,6 +63,7 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult AddOffice(OfficeDTO o)
         {
+            if(context.Offices.Count(of => of.Description == o.OfficeName) == 1) return BadRequest("Office Already Exists");
             
             Office office = new Office();
             office.Description = o.OfficeName;
@@ -77,6 +78,7 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult AddOfficeAndEmployees(OfficeEmployeeListDTO o)
         {
+            if (context.Offices.Count(of => of.Description == o.OfficeName) > 0) return BadRequest("Office Already Exists");
 
             Office office = new Office();
             office.Description = o.OfficeName;
@@ -139,12 +141,27 @@ namespace Zadatak.Controllers
 
        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteOffice(long id)
+        public IActionResult DeleteOfficeAndEmployees(long id)
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
 
             var o = context.Offices.Find(id);
             context.Offices.Remove(o);
+
+            context.SaveChanges();
+
+            return Ok("Deleted");
+        }
+
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteJustEmployees(long id)
+        {
+            if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
+
+
+            var o = context.Offices.Include(of => of.Employees).First(of => of.Id == id);
+            o.Employees.RemoveRange(0, count:o.Employees.Count);
 
             context.SaveChanges();
 

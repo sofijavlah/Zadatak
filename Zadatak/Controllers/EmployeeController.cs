@@ -41,17 +41,27 @@ namespace Zadatak.Controllers
         [HttpGet("{id}")]
         public IActionResult GetEmployee(long id)
         {
-            if (context.Employees.Include(e => e.Office).First(x => x.Id == id) == null) return NotFound();
+            if (context.Employees.Include(e => e.Office).Include(e => e.Devices).First(x => x.Id == id) == null) return NotFound();
 
-            var employee = new EmployeeToOfficeDTO(context.Employees.Find(id));
-
+            var targetEmployee = context.Employees.Include(e => e.Office).Include(e => e.Devices).First(x => x.Id == id);
+            var employee = new EmployeeDeviceListDTO
+            {
+                FName = targetEmployee.FirstName,
+                LName = targetEmployee.LastName,
+                OfficeName = targetEmployee.Office.Description,
+                DeviceList = targetEmployee.Devices.Select(d => new DeviceDTO
+                {
+                    Name = d.Name
+                })
+            };
+            
             return Ok(employee);
 
         }
 
         // POST: api/Employee
         [HttpPost]
-        public IActionResult AddEmployee(EmployeeToOfficeDTO e)
+        public IActionResult AddEmployeeAndOffice(EmployeeToOfficeDTO e)
         {
             var broj = context.Offices.Count(o => o.Description == e.OfficeName);
 
@@ -86,12 +96,52 @@ namespace Zadatak.Controllers
 
             return Ok("Added Employee");
         }
-        
+
+        // POST: api/Employee
+        [HttpPost]
+        public IActionResult AddEmployeeAndDevices(EmployeeDeviceListDTO e)
+        {
+            Employee newEmployee = new Employee();
+
+            var targetOffice = context.Offices.Include(o => o.Employees).First(o => o.Description == e.OfficeName);
+
+            targetOffice.Employees.Add(newEmployee);
+
+            context.SaveChanges();
+            
+            newEmployee.FirstName = e.FName;
+            newEmployee.LastName = e.LName;
+
+            newEmployee.Devices = new List<Device>();
+
+            foreach (DeviceDTO d in e.DeviceList)
+            {
+                newEmployee.Devices.Add(new Device
+                {
+                    Name = d.Name
+                });
+            }
+
+            context.SaveChanges();
+
+            return Ok("Added Employee");
+        }
+
         // PUT: api/Employee/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Employee e)
+        public IActionResult ChangeEmployeeName(long id, EmployeeDTO e)
         {
-            return Ok();
+
+            var targetEmployee = context.Employees.Include(em => em.Office).First(em => em.Id == id);
+
+            if (targetEmployee == null) return NotFound("Employee doesn't exist");
+
+            targetEmployee.FirstName = e.FName;
+            targetEmployee.LastName = e.LName;
+
+            context.SaveChanges();
+
+            return Ok("Modified Employee name");
         }
 
         // DELETE: api/ApiWithActions/5

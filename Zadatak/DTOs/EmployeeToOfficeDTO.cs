@@ -19,12 +19,12 @@ namespace Zadatak.DTOs
 
         public string OfficeName { get; set; }
 
-        public EmployeeToOfficeDTO(Employee e)
-        {
-            FName = e.FirstName;
-            LName = e.LastName;
-            OfficeName = e.Office.Description;
-        }
+        //public EmployeeToOfficeDTO(Employee e)
+        //{
+        //    FName = e.FirstName;
+        //    LName = e.LastName;
+        //    OfficeName = e.Office.Description;
+        //}
 
     }
 }
