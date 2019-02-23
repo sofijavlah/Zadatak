@@ -10,11 +10,11 @@ namespace Zadatak.Models
         //public long Id { get; set; }
 
         public string OfficeName { get; set; }
-        
-        public OfficeDTO(Office o)
-        {
-            OfficeName = o.Description;
-        }
+
+        //public OfficeDTO(Office o)
+        //{
+        //    OfficeName = o.Description;
+        //}
 
     }
 }

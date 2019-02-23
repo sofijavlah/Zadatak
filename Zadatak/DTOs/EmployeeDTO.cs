@@ -7,15 +7,16 @@ namespace Zadatak.Models
 {
     public class EmployeeDTO
     {
+        public long Id { get; set; }
 
         public string FName { get; set; }
 
         public string LName { get; set; }
 
-        public EmployeeDTO(Employee e)
-        {
-            FName = e.FirstName;
-            LName = e.LastName;
-        }
+        //public EmployeeDTO(Employee e)
+        //{
+        //    FName = e.FirstName;
+        //    LName = e.LastName;
+        //}
     }
 }

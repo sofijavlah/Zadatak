@@ -10,7 +10,7 @@ using Zadatak.Models;
 
 namespace Zadatak.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -26,22 +26,24 @@ namespace Zadatak.Controllers
 
         // GET: api/Employee
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetEmployees()
         {
-            var employees = context.Employees.Include(em => em.Devices).Select(em => new EmployeeDTO(em));
+            var employees = context.Employees.Include(em => em.Devices).Select(em => new EmployeeDTO
+            {
+                FName = em.FirstName,
+                LName = em.FirstName
+            });
 
             return Ok(employees);
         }
 
         // GET: api/Employee/5
         [HttpGet("{id}")]
-        public IActionResult Get(long id)
+        public IActionResult GetEmployee(long id)
         {
             if (context.Employees.Include(e => e.Office).First(x => x.Id == id) == null) return NotFound();
 
-            var targetEmployee = context.Employees.Find(id);
-
-            var employee = new EmployeeToOfficeDTO(targetEmployee);
+            var employee = new EmployeeToOfficeDTO(context.Employees.Find(id));
 
             return Ok(employee);
 
@@ -49,7 +51,7 @@ namespace Zadatak.Controllers
 
         // POST: api/Employee
         [HttpPost]
-        public IActionResult Post(EmployeeToOfficeDTO e)
+        public IActionResult AddEmployee(EmployeeToOfficeDTO e)
         {
             var broj = context.Offices.Count(o => o.Description == e.OfficeName);
 
