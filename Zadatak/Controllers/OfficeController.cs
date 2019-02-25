@@ -41,9 +41,9 @@ namespace Zadatak.Controllers
         [HttpGet("{id}")]
         public IActionResult GetOffice(long id)
         {
-            if (context.Offices.Include(o => o.Employees).First(o => o.Id == id) == null)
+            if (context.Offices.Include(o => o.Employees).FirstOrDefault(o => o.Id == id) == null)
             {
-                return NotFound();
+                return NotFound("Office doesn't exist");
             }
 
             var targetOffice = context.Offices.Include(o => o.Employees).Where(o => o.Id == id).Select(l => new OfficeEmployeeListDTO
@@ -105,7 +105,7 @@ namespace Zadatak.Controllers
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
 
-            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).First();
+            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).FirstOrDefault();
 
             targetOffice.Description = o.OfficeName;
 
@@ -120,7 +120,7 @@ namespace Zadatak.Controllers
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
             
-            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).First();
+            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).FirstOrDefault();
 
             targetOffice.Description = o.OfficeName;
             targetOffice.Employees = new List<Employee>();
@@ -160,7 +160,7 @@ namespace Zadatak.Controllers
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
 
 
-            var o = context.Offices.Include(of => of.Employees).First(of => of.Id == id);
+            var o = context.Offices.Include(of => of.Employees).FirstOrDefault(of => of.Id == id);
             o.Employees.RemoveRange(0, count:o.Employees.Count);
 
             context.SaveChanges();

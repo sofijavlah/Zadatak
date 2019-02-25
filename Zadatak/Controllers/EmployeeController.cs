@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Zadatak.DTOs;
 using Zadatak.Models;
 
@@ -16,9 +18,9 @@ namespace Zadatak.Controllers
     {
         private readonly WorkContext context;
 
-        public EmployeeController(WorkContext _context)
+        public EmployeeController(WorkContext contextt)
         {
-            context = _context;
+            context = contextt;
             context.Employees.Include(employee => employee.Office).Include(employee => employee.Devices);
             context.SaveChanges();
 
@@ -41,9 +43,9 @@ namespace Zadatak.Controllers
         [HttpGet("{id}")]
         public IActionResult GetEmployee(long id)
         {
-            if (context.Employees.Include(e => e.Office).Include(e => e.Devices).First(x => x.Id == id) == null) return NotFound();
+            if (context.Employees.Include(e => e.Office).Include(e => e.Devices).FirstOrDefault(x => x.Id == id) == null) return NotFound();
 
-            var targetEmployee = context.Employees.Include(e => e.Office).Include(e => e.Devices).First(x => x.Id == id);
+            var targetEmployee = context.Employees.Include(e => e.Office).Include(e => e.Devices).FirstOrDefault(x => x.Id == id);
             var employee = new EmployeeDeviceListDTO
             {
                 FName = targetEmployee.FirstName,
@@ -61,7 +63,7 @@ namespace Zadatak.Controllers
 
         // POST: api/Employee
         [HttpPost]
-        public IActionResult AddEmployeeAndOffice(EmployeeToOfficeDTO e)
+        public IActionResult AddEmployeeToOffice(EmployeeToOfficeDTO e)
         {
             var broj = context.Offices.Count(o => o.Description == e.OfficeName);
 
@@ -74,17 +76,19 @@ namespace Zadatak.Controllers
 
                 context.SaveChanges();
 
-                Employee em = new Employee();
-                em.FirstName = e.FName;
-                em.LastName = e.LName;
-                em.OfficeId = o.Id;
-                context.Employees.Add(em);
+                Employee newEmployee = new Employee();
+                newEmployee.FirstName = e.FName;
+                newEmployee.LastName = e.LName;
+                newEmployee.OfficeId = o.Id;
+
+                context.Employees.Add(newEmployee);
+
                 context.SaveChanges();
 
                 return Ok("Added Employee and Office");
             }
 
-            var office = context.Offices.First(o => o.Description == e.OfficeName);
+            var office = context.Offices.Include(o => o.Employees).First(o => o.Description == e.OfficeName);
 
             Employee employee = new Employee();
             employee.FirstName = e.FName;
@@ -103,7 +107,7 @@ namespace Zadatak.Controllers
         {
             Employee newEmployee = new Employee();
 
-            var targetOffice = context.Offices.Include(o => o.Employees).First(o => o.Description == e.OfficeName);
+            var targetOffice = context.Offices.Include(o => o.Employees).FirstOrDefault(o => o.Description == e.OfficeName);
 
             targetOffice.Employees.Add(newEmployee);
 
@@ -132,7 +136,7 @@ namespace Zadatak.Controllers
         public IActionResult ChangeEmployeeName(long id, EmployeeDTO e)
         {
 
-            var targetEmployee = context.Employees.Include(em => em.Office).First(em => em.Id == id);
+            var targetEmployee = context.Employees.Include(em => em.Office).FirstOrDefault(em => em.Id == id);
 
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
 
@@ -144,11 +148,86 @@ namespace Zadatak.Controllers
             return Ok("Modified Employee name");
         }
 
+        // PUT: api/Employee/5
+        [HttpPut("{id}")]
+        public IActionResult ChangeEmployeeContent(long id, EmployeeDeviceListDTO e)
+        {
+
+            var targetEmployee = context.Employees.Include(em => em.Office).FirstOrDefault(em => em.Id == id);
+
+            if (targetEmployee == null) return NotFound("Employee doesn't exist");
+
+            var targetOffice = context.Offices.Include(o => o.Employees).FirstOrDefault(o => o.Description == e.OfficeName);
+
+            if (targetOffice == null)
+            {
+                Office newOffice = new Office
+                {
+                    Description = e.OfficeName
+                };
+                context.Offices.Add(newOffice);
+
+                context.SaveChanges();
+
+                targetEmployee.FirstName = e.FName;
+                targetEmployee.LastName = e.LName;
+
+                newOffice.Employees.Add(targetEmployee);
+
+                context.SaveChanges();
+
+                targetEmployee.Devices = new List<Device>(e.DeviceList.Select(d => new Device
+                {
+                    Name = d.Name
+                }));
+
+                return Ok("Changed Employee Name, made new Office and Device List");
+            }
+            
+            if (targetOffice.Employees.Find(x => x.Id == id) != null)
+            {
+                targetEmployee.Devices = new List<Device>(e.DeviceList.Select(d => new Device
+                {
+                    Name = d.Name
+                }));
+
+                context.SaveChanges();
+                return Ok("Changed Employee Device List");
+            }
+
+            var newEmployee = new Employee
+            {
+                FirstName = targetEmployee.FirstName,
+                LastName = targetEmployee.LastName
+            };
+
+            context.Employees.Remove(targetEmployee);
+
+            targetOffice.Employees.Add(newEmployee);
+
+            newEmployee.FirstName = e.FName;
+            newEmployee.LastName = e.LName;
+            newEmployee.Devices = new List<Device>(e.DeviceList.Select(d => new Device
+            {
+                Name = d.Name
+            }));
+
+            context.SaveChanges();
+
+            return Ok("Changed Employee Name, Office and Device List");
+        }
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
-            return Ok();
+            var targetEmployee = context.Employees.Include(e => e.Devices).FirstOrDefault(e => e.Id == id);
+
+            if (targetEmployee == null) return NotFound("Employee doesn't exist");
+
+            context.Employees.Remove(targetEmployee);
+
+            return Ok("Deleted");
         }
     }
 }

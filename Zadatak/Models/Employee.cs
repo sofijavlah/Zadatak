@@ -23,7 +23,9 @@ namespace Zadatak.Models
 
         public List<Device> Devices { get; set; } = new List<Device>();
 
-        
+        public List<DeviceUsage> UsageList { get; set; } = new List<DeviceUsage>();
+
+
 
     }
 }

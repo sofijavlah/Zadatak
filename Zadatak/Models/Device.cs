@@ -17,5 +17,7 @@ namespace Zadatak.Models
 
         [ForeignKey("EmployeeId")]
         public Employee Employee { get; set; }
+
+        public List<DeviceUsage> UsageList { get; set; }
     }
 }

@@ -3,19 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Zadatak.Models
+namespace Zadatak.DTOs
 {
-    public class DeviceUsage
+    public class UsageDTO
     {
-        public long Id { get; set; }
-
         public DateTime From { get; set; }
 
         public DateTime? To { get; set; }
-
-        public Employee Employee { get; set; }
-
-        public Device Device { get; set; }
-
     }
 }
