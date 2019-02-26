@@ -4,5 +4,131 @@
         <name>Zadatak</name>
     </assembly>
     <members>
+        <member name="T:Zadatak.Controllers.DeviceController">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.#ctor(Zadatak.Models.WorkContext)">
+            <summary>Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.</summary>
+            <param name="contextt">The contextt.</param>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceList">
+            <summary>Gets the device list.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(System.String)">
+            <summary>
+            Gets the device use history.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(System.String)">
+            <summary>
+            Gets the device current information.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.DTOs.DeviceUserInfoDTO)">
+            <summary>
+            Adds the device.
+            </summary>
+            <param name="d">The d.</param>
+            <returns>
+            Appropriate message if device was added, if it already exists or if employee wasn't found.
+            </returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceName(System.Int64,Zadatak.Models.DeviceDTO)">
+            <summary>
+            Changes the name of the device.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="device">The device.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.DTOs.DeviceUserInfoDTO)">
+            <summary>
+            Changes the device user.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.DeleteDevice(System.Int64)">
+            <summary>
+            Deletes the device.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">Greska</exception>
+        </member>
+        <member name="T:Zadatak.Controllers.EmployeeController">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
+            </summary>
+            <param name="contextt">The contextt.</param>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployees">
+            <summary>
+            Gets the employees.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployee(System.Int64)">
+            <summary>
+            Gets the employee.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(System.String,System.String)">
+            <summary>
+            Gets the employee use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.GetDeviceUser(Zadatak.Models.DeviceDTO)">
+            <summary>
+            Gets the device user.
+            </summary>
+            <param name="device">The device.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.DTOs.EmployeeOfficeInfoDTO)">
+            <summary>
+            Adds the employee to office.
+            </summary>
+            <param name="e">The e.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">
+            <summary>
+            Changes the name of the employee.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="e">The e.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.Delete(System.Int64)">
+            <summary>
+            Deletes the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Zadatak.Models.DeviceUsage">
+            <summary>
+            
+            </summary>
+        </member>
     </members>
 </doc>

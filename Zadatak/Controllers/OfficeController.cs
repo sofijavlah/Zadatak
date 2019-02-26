@@ -61,7 +61,7 @@ namespace Zadatak.Controllers
 
         // POST: api/Office 
         [HttpPost]
-        public IActionResult AddOffice(OfficeDTO o)
+        public IActionResult AddOffice([FromQuery]OfficeDTO o)
         {
             if(context.Offices.Count(of => of.Description == o.OfficeName) == 1) return BadRequest("Office Already Exists");
             
@@ -76,7 +76,7 @@ namespace Zadatak.Controllers
 
         // POST: api/Office 
         [HttpPost]
-        public IActionResult AddOfficeAndEmployees(OfficeEmployeeListDTO o)
+        public IActionResult AddOfficeAndEmployees([FromQuery]OfficeEmployeeListDTO o)
         {
             if (context.Offices.Count(of => of.Description == o.OfficeName) > 0) return BadRequest("Office Already Exists");
 
@@ -101,7 +101,7 @@ namespace Zadatak.Controllers
 
         // PUT: api/Office/5
         [HttpPut("{id}")]
-        public IActionResult ChangeOfficeName(long id, OfficeDTO o)
+        public IActionResult ChangeOfficeName(long id, [FromQuery] OfficeDTO o)
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
 
@@ -116,7 +116,7 @@ namespace Zadatak.Controllers
 
         // PUT: api/Office/5
         [HttpPut("{id}")]
-        public IActionResult ChangeOfficeContent(long id, OfficeEmployeeListDTO o)
+        public IActionResult ChangeOfficeContent(long id, [FromQuery] OfficeEmployeeListDTO o)
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
             

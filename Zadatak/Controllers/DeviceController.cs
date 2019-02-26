@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 using Swashbuckle.AspNetCore.Swagger;
 using Zadatak.DTOs;
 using Zadatak.Models;
 
 namespace Zadatak.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class DeviceController : ControllerBase
@@ -19,6 +25,8 @@ namespace Zadatak.Controllers
 
         private readonly WorkContext context;
 
+        /// <summary>Initializes a new instance of the <see cref="DeviceController"/> class.</summary>
+        /// <param name="contextt">The contextt.</param>
         public DeviceController(WorkContext contextt)
         {
             context = contextt;
@@ -26,6 +34,8 @@ namespace Zadatak.Controllers
         }
 
         // GET: api/Device
+        /// <summary>Gets the device list.</summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult GetDeviceList()
         {
@@ -37,76 +47,135 @@ namespace Zadatak.Controllers
             return Ok(devices);
         }
 
-        // GET: api/DeviceWithDetails
+        // GET: api/Device
+        /// <summary>
+        /// Gets the device use history.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetDeviceDetails(long id)
+        public IActionResult GetDeviceUseHistory(string name)
+        {
+
+            //var usage = context.DeviceUsages.Where(x => x.Device.Name == name);
+
+            // var info = usage.Select(x => new UserUsageDTO
+            // {
+            //     User = x.Employee.FirstName + " " + x.Employee.LastName,
+            //     From = x.From,
+            //     To = x.To
+            // });
+
+            // return Ok(info);
+
+
+            long id = context.Devices.Where(x => x.Name == name).Select(x => x.Id).First();
+
+            var usages = context.DeviceUsages.Where(x => x.Device.Id == id).GroupBy(x => x.Device.Name).Select(x => new
+            {
+                device = x.Key,
+                user = x.Select(u => u.Employee.FirstName + " " + u.Employee.LastName, new UserUsageDTO
+                {
+                    To
+                }),
+            });
+
+            return Ok(usages);
+
+
+        }
+
+        /// <summary>
+        /// Gets the device current information.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetDeviceCurrentInfo(string name)
         {
             var targetDevice = context.Devices.Include(d => d.Employee).Include(d => d.UsageList)
-                .FirstOrDefault(d => d.Id == id);
+                .FirstOrDefault(d => d.Name == name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var usage = targetDevice.UsageList.Select(u => new UsageDTO
+            var usage = targetDevice.UsageList.Where(x => x.To == null).Select(u => new UsageDTO
             {
                 From = u.From,
                 To = u.To,
-            });
+            }).First();
 
-            var device = new DeviceUsageUserInfoDTO
+            var userInfo = new UserUsageDTO
             {
-                Name = targetDevice.Name,
                 User = targetDevice.Employee.FirstName + " " + targetDevice.Employee.LastName,
-                ListOfUses = usage
+                From = usage.From,
+                To = usage.To
             };
 
-            return Ok(device);
+            return Ok(userInfo);
         }
-
-        // GET: api/Device
-        [HttpGet]
-        public IActionResult GetDeviceUseHistory()
-        {
-
-           return Ok();
-        }
-
-        // GET: api/Device/5
-        [HttpGet("{id}")]
-        public IActionResult GetDevice(long id)
-        {
-            
-            return Ok();
-        }
+        
 
         // POST: api/Device
+        /// <summary>
+        /// Adds the device.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>
+        /// Appropriate message if device was added, if it already exists or if employee wasn't found.
+        /// </returns>
         [HttpPost]
-        public IActionResult AddDevice(DeviceUserInfoDTO d)
+        public IActionResult AddDevice([FromQuery]DeviceUserInfoDTO d)
         {
             var device = context.Devices.Include(x => x.UsageList).Include(x => x.Employee).ThenInclude(x => x.Office)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device != null) return BadRequest("Device Already Exists");
 
-            var employee = context.Employees.Include(x => x.Devices).ThenInclude(x => x.UsageList)
+            var employee = context.Employees.Include(x => x.Devices)
                 .FirstOrDefault(x => x.FirstName + " " + x.LastName == d.User);
 
             if (employee == null) return BadRequest("Employee doesn't exist");
 
-            device = new Device();
-            device.Name = d.Name;
-            device.UsageList.Add(new DeviceUsage
-            {
-                From = DateTime.Now,
-                To = null
-            });
-            employee.Devices.Add(device);
+            var newDevice = new Device();
             context.SaveChanges();
-            return Ok();
+
+            newDevice.Name = d.Name;
+            newDevice.Employee = employee;
+
+            var newUsage = new DeviceUsage();
+            context.SaveChanges();
+
+            newUsage.Employee = employee;
+            newUsage.Device = newDevice;
+            newUsage.From = DateTime.Now;
+            newUsage.To = null;
+           
+            context.Devices.Add(newDevice);
+            context.SaveChanges();
+
+            context.DeviceUsages.Add(newUsage);
+            context.SaveChanges();
+
+            newDevice.UsageList.Add(newUsage);
+            employee.UsageList.Add(newUsage);
+            employee.Devices.Add(newDevice);
+
+            //newDevice.UsageList.Add(newUsage);
+            context.SaveChanges();
+            context.DeviceUsages.Add(newUsage);
+            //employee.Devices.Add(newDevice);
+            //context.SaveChanges();
+            return Ok("Added Device");
         }
 
         // PUT: api/Device/5
+        /// <summary>
+        /// Changes the name of the device.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="device">The device.</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult ChangeDeviceName(long id, DeviceDTO device)
+        public IActionResult ChangeDeviceName(long id, [FromQuery] DeviceDTO device)
         {
             var targetDevice = context.Devices.Include(d => d.Employee).FirstOrDefault(d => d.Id == id);
 
@@ -114,21 +183,27 @@ namespace Zadatak.Controllers
 
             targetDevice.Name = device.Name;
             context.SaveChanges();
-            return Ok();
+            return Ok("Changed Device name");
         }
 
         // PUT: api/Device/5
-        [HttpPut("{id}")]
-        public IActionResult ChangeDeviceUser(long id, DeviceUserInfoDTO d)
+        /// <summary>
+        /// Changes the device user.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="d">The d.</param>
+        /// <returns></returns>
+        [HttpPut]
+        public IActionResult ChangeDeviceUser([FromQuery]DeviceUserInfoDTO d)
         {
             var device = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Name == d.Name);
 
             if (device == null) return NotFound("Device doesn't exist");
 
             var oldUser = device.Employee;
 
-            var newUser = context.Employees.Include(x => x.Devices).ThenInclude(x => x.UsageList)
+            var newUser = context.Employees.Include(x => x.Devices)
                 .FirstOrDefault(x => x.FirstName + " " + x.LastName == d.User);
 
             if (newUser == null) return BadRequest("Employee doesn't exist");
@@ -137,23 +212,55 @@ namespace Zadatak.Controllers
             oldUsage.To = DateTime.Now;
 
             context.SaveChanges();
-
-            newUser.Devices.Add(device);
+            
             device.Name = d.Name;
-            device.UsageList.Add(new DeviceUsage
+
+            DeviceUsage newDeviceUsage = new DeviceUsage
             {
                 From = DateTime.Now,
                 To = null
-            });
+            };
+
+            device.Employee = newUser;
+
+            newDeviceUsage.Employee = newUser;
+            newDeviceUsage.Device = device;
+
+            device.UsageList.Add(newDeviceUsage);
             context.SaveChanges();
+
+            newUser.Devices.Add(device);
+            newUser.UsageList.Add(newDeviceUsage);
+            context.DeviceUsages.Add(newDeviceUsage);
 
             return Ok("Changed User");
         }
 
         // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes the device.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">Greska</exception>
         [HttpDelete("{id}")]
         public IActionResult DeleteDevice (long id)
         {
+            var targetDevice = context.Devices.Find(id);
+
+            if (targetDevice == null) return NotFound("Device doesn't exist");
+
+            context.Devices.Remove(targetDevice);
+
+            //try
+            //{
+            //    context.Devices.Remove(targetDevice);
+            //}
+
+            //catch ()
+            //{
+            //}
+
             return Ok();
         }
     }

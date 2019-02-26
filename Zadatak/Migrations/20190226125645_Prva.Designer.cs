@@ -10,8 +10,8 @@ using Zadatak.Models;
 namespace Zadatak.Migrations
 {
     [DbContext(typeof(WorkContext))]
-    [Migration("20190222075336_prva")]
-    partial class prva
+    [Migration("20190226125645_Prva")]
+    partial class Prva
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,9 +44,9 @@ namespace Zadatak.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("DId");
+                    b.Property<long?>("DeviceId");
 
-                    b.Property<long?>("EId");
+                    b.Property<long?>("EmployeeId");
 
                     b.Property<DateTime>("From");
 
@@ -54,9 +54,9 @@ namespace Zadatak.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DId");
+                    b.HasIndex("DeviceId");
 
-                    b.HasIndex("EId");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("DeviceUsages");
                 });
@@ -103,13 +103,13 @@ namespace Zadatak.Migrations
 
             modelBuilder.Entity("Zadatak.Models.DeviceUsage", b =>
                 {
-                    b.HasOne("Zadatak.Models.Device", "D")
-                        .WithMany()
-                        .HasForeignKey("DId");
+                    b.HasOne("Zadatak.Models.Device", "Device")
+                        .WithMany("UsageList")
+                        .HasForeignKey("DeviceId");
 
-                    b.HasOne("Zadatak.Models.Employee", "E")
-                        .WithMany()
-                        .HasForeignKey("EId");
+                    b.HasOne("Zadatak.Models.Employee", "Employee")
+                        .WithMany("UsageList")
+                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("Zadatak.Models.Employee", b =>

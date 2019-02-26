@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Zadatak.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DeviceUsage
     {
         public long Id { get; set; }

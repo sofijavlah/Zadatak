@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Zadatak.DTOs
 {
-    public class DeviceUsageInfoDTO
+    public class UserUsageDTO
     {
-        public string Name { get; set; }
+        public string User { get; set; }
 
         public DateTime? To { get; set; }
 

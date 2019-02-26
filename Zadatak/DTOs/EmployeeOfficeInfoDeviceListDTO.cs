@@ -6,7 +6,7 @@ using Zadatak.Models;
 
 namespace Zadatak.DTOs
 {
-    public class EmployeeDeviceListDTO
+    public class EmployeeOfficeInfoDeviceListDTO
     {
         public string FName { get; set; }
 
@@ -14,6 +14,6 @@ namespace Zadatak.DTOs
 
         public string OfficeName { get; set; }
 
-        public IEnumerable<DeviceDTO> DeviceList = new List<DeviceDTO>();
+        public IEnumerable<DeviceUsageInfoDTO> DeviceUsageList = new List<DeviceUsageInfoDTO>();
     }
 }

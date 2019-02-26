@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Zadatak.Migrations
 {
-    public partial class prva : Migration
+    public partial class Prva : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -70,21 +70,21 @@ namespace Zadatak.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     From = table.Column<DateTime>(nullable: false),
                     To = table.Column<DateTime>(nullable: true),
-                    EId = table.Column<long>(nullable: true),
-                    DId = table.Column<long>(nullable: true)
+                    EmployeeId = table.Column<long>(nullable: true),
+                    DeviceId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceUsages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DeviceUsages_Devices_DId",
-                        column: x => x.DId,
+                        name: "FK_DeviceUsages_Devices_DeviceId",
+                        column: x => x.DeviceId,
                         principalTable: "Devices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DeviceUsages_Employees_EId",
-                        column: x => x.EId,
+                        name: "FK_DeviceUsages_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -96,14 +96,14 @@ namespace Zadatak.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeviceUsages_DId",
+                name: "IX_DeviceUsages_DeviceId",
                 table: "DeviceUsages",
-                column: "DId");
+                column: "DeviceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeviceUsages_EId",
+                name: "IX_DeviceUsages_EmployeeId",
                 table: "DeviceUsages",
-                column: "EId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_OfficeId",

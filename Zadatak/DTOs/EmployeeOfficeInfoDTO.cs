@@ -7,24 +7,12 @@ using Zadatak.Models;
 
 namespace Zadatak.DTOs
 {
-    public class EmployeeToOfficeDTO
+    public class EmployeeOfficeInfoDTO
     {
-        //public long Id { get; set; }
-
         public string FName { get; set; }
 
         public string LName { get; set; }
-
-        //public long OfficeId { get; set; }
-
+        
         public string OfficeName { get; set; }
-
-        //public EmployeeToOfficeDTO(Employee e)
-        //{
-        //    FName = e.FirstName;
-        //    LName = e.LastName;
-        //    OfficeName = e.Office.Description;
-        //}
-
     }
 }
