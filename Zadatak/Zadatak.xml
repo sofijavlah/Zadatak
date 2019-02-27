@@ -96,6 +96,14 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeOffice(System.String,System.String)">
+            <summary>
+            Gets the employee office.
+            </summary>
+            <param name="fName">Name of the f.</param>
+            <param name="lName">Name of the l.</param>
+            <returns></returns>
+        </member>
         <member name="M:Zadatak.Controllers.EmployeeController.GetDeviceUser(Zadatak.Models.DeviceDTO)">
             <summary>
             Gets the device user.
@@ -125,10 +133,92 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
+        <member name="T:Zadatak.Controllers.OfficeController">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.GetOffices">
+            <summary>
+            Gets the offices.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.GetOffice(System.Int64)">
+            <summary>
+            Gets the office.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.AddOffice(Zadatak.Models.OfficeDTO)">
+            <summary>
+            Adds the office.
+            </summary>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.AddOfficeAndEmployees(Zadatak.DTOs.OfficeEmployeeListDTO)">
+            <summary>
+            Adds the office and employees.
+            </summary>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.ChangeOfficeName(System.Int64,Zadatak.Models.OfficeDTO)">
+            <summary>
+            Changes the name of the office.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.ChangeOfficeContent(System.Int64,Zadatak.DTOs.OfficeEmployeeListDTO)">
+            <summary>
+            Changes the content of the office.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.DeleteOfficeAndEmployees(System.Int64)">
+            <summary>
+            Deletes the office and employees.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.DeleteJustEmployees(System.Int64)">
+            <summary>
+            Deletes the just employees.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Zadatak.Models.DeviceUsage">
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Zadatak.Models.ExceptionOnDelete.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Models.ExceptionOnDelete"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="T:Zadatak.Models.WorkContext">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:Microsoft.EntityFrameworkCore.DbContext" />
+        </member>
+        <member name="M:Zadatak.Models.WorkContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Zadatak.Models.WorkContext},Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Models.WorkContext"/> class.
+            </summary>
+            <param name="options">The options.</param>
+            <param name="ho">The ho.</param>
         </member>
     </members>
 </doc>

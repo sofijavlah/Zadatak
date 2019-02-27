@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Remotion.Linq.Clauses;
@@ -12,21 +14,29 @@ using Zadatak.Models;
 
 namespace Zadatak.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class OfficeController : ControllerBase
     {
 
+        private readonly IMapper _mapper;
         private readonly WorkContext context;
 
-        public OfficeController(WorkContext _context)
+        public OfficeController(IMapper mapper, WorkContext contextt)
         {
-            context = _context;
-            context.Offices.Include(office => office.Employees).ThenInclude(employee => employee.Devices);
-            context.SaveChanges();
+            context = contextt;
+            _mapper = mapper;
         }
 
         // GET: api/Office
+        /// <summary>
+        /// Gets the offices.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult GetOffices()
         {
@@ -38,28 +48,42 @@ namespace Zadatak.Controllers
         }
 
         // GET: api/Office/5
+        /// <summary>
+        /// Gets the office.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult GetOffice(long id)
         {
-            if (context.Offices.Include(o => o.Employees).FirstOrDefault(o => o.Id == id) == null)
-            {
-                return NotFound("Office doesn't exist");
-            }
+            //if (context.Offices.Include(o => o.Employees).FirstOrDefault(o => o.Id == id) == null)
+            //{
+            //    return NotFound("Office doesn't exist");
+            //}
 
-            var targetOffice = context.Offices.Include(o => o.Employees).Where(o => o.Id == id).Select(l => new OfficeEmployeeListDTO
-            {
-                OfficeName = l.Description,
-                EmployeeList = l.Employees.Select(e => new EmployeeDTO
-                {
-                    FName = e.FirstName,
-                    LName = e.LastName
-                })
-            });
+            //var targetOffice = context.Offices.Include(o => o.Employees).Where(o => o.Id == id).Select(l => new OfficeEmployeeListDTO
+            //{
+            //    OfficeName = l.Description,
+            //    EmployeeList = l.Employees.Select(e => new EmployeeDTO
+            //    {
+            //        FName = e.FirstName,
+            //        LName = e.LastName
+            //    })
+            //});
+            //return Ok(targetOffice);
+            var targetOffice = context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Id == id);
             
-            return Ok(targetOffice);
+            var officeInfo = _mapper.Map<Office, OfficeEmployeeListDTO>(targetOffice);
+
+            return Ok(officeInfo);
         }
 
         // POST: api/Office 
+        /// <summary>
+        /// Adds the office.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult AddOffice([FromQuery]OfficeDTO o)
         {
@@ -75,6 +99,11 @@ namespace Zadatak.Controllers
         }
 
         // POST: api/Office 
+        /// <summary>
+        /// Adds the office and employees.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult AddOfficeAndEmployees([FromQuery]OfficeEmployeeListDTO o)
         {
@@ -84,7 +113,7 @@ namespace Zadatak.Controllers
             office.Description = o.OfficeName;
 
             office.Employees = new List<Employee>();
-            foreach (EmployeeDTO employee in o.EmployeeList)
+            foreach (EmployeeDTO employee in o.Employees)
             {
                 office.Employees.Add(new Employee
                 {
@@ -100,6 +129,12 @@ namespace Zadatak.Controllers
         }
 
         // PUT: api/Office/5
+        /// <summary>
+        /// Changes the name of the office.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult ChangeOfficeName(long id, [FromQuery] OfficeDTO o)
         {
@@ -115,6 +150,12 @@ namespace Zadatak.Controllers
         }
 
         // PUT: api/Office/5
+        /// <summary>
+        /// Changes the content of the office.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult ChangeOfficeContent(long id, [FromQuery] OfficeEmployeeListDTO o)
         {
@@ -125,7 +166,7 @@ namespace Zadatak.Controllers
             targetOffice.Description = o.OfficeName;
             targetOffice.Employees = new List<Employee>();
 
-            foreach (EmployeeDTO employee in o.EmployeeList)
+            foreach (EmployeeDTO employee in o.Employees)
             {
                 targetOffice.Employees.Add(new Employee
                 {
@@ -139,7 +180,12 @@ namespace Zadatak.Controllers
             return Ok("Modified Office content");
         }
 
-       // DELETE: api/ApiWithActions/5
+        // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes the office and employees.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult DeleteOfficeAndEmployees(long id)
         {
@@ -154,6 +200,11 @@ namespace Zadatak.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes the just employees.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult DeleteJustEmployees(long id)
         {

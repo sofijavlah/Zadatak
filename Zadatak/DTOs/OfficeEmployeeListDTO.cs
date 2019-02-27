@@ -10,6 +10,6 @@ namespace Zadatak.DTOs
     {
         public string OfficeName { get; set; }
 
-        public IEnumerable<EmployeeDTO> EmployeeList { get; set; }
+        public IEnumerable<EmployeeDTO> Employees { get; set; }
     }
 }

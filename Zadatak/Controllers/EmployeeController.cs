@@ -105,6 +105,12 @@ namespace Zadatak.Controllers
             return Ok(employee);
         }
 
+        /// <summary>
+        /// Gets the employee office.
+        /// </summary>
+        /// <param name="fName">Name of the f.</param>
+        /// <param name="lName">Name of the l.</param>
+        /// <returns></returns>
         [HttpGet("{fName}/{lName}")]
         public IActionResult GetEmployeeOffice(string fName, string lName)
         {

@@ -8,10 +8,19 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Zadatak.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.EntityFrameworkCore.DbContext" />
     public class WorkContext : DbContext
     {
         protected readonly IHostingEnvironment ho;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkContext"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="ho">The ho.</param>
         public WorkContext(DbContextOptions<WorkContext> options, IHostingEnvironment ho)
             : base(options)
         {
