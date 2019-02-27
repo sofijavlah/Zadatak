@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -238,20 +239,31 @@ namespace Zadatak.Controllers
         {
             var targetDevice = context.Devices.Find(id);
 
-            if (targetDevice == null) return NotFound("Device doesn't exist");
+            if (targetDevice == null) return BadRequest("Device doesn't exist");
 
             context.Devices.Remove(targetDevice);
+            try
+            {
+                context.SaveChanges();
+                return Ok("Deleted");
+            }
 
-            //try
-            //{
-            //    context.Devices.Remove(targetDevice);
-            //}
+            catch (DbUpdateException ex)
+            {
 
-            //catch ()
-            //{
-            //}
+                var sqlException = ex.GetBaseException() as SqlException;
 
-            return Ok();
+                if (sqlException != null)
+                {
+                    var exNum = sqlException.Number;
+
+                    if (exNum == 547)
+                    {
+                        return BadRequest("Cannot delete device from history.");
+                    }
+                }
+                return BadRequest("I don't know");
+            } 
         }
     }
 }

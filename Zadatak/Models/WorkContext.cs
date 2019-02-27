@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Zadatak.Models
 {
@@ -15,9 +16,7 @@ namespace Zadatak.Models
             : base(options)
         {
             this.ho = ho;
-            
         }
-
 
         public DbSet<Office> Offices { get; set; }
         public DbSet<Employee> Employees { get; set; }

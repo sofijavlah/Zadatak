@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -210,6 +211,8 @@ namespace Zadatak.Controllers
             return Ok("Modified Employee name");
         }
 
+        
+
         // DELETE: api/ApiWithActions/5
         /// <summary>
         /// Deletes the specified identifier.
@@ -219,11 +222,30 @@ namespace Zadatak.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
+            
             var targetEmployee = context.Employees.FirstOrDefault(e => e.Id == id);
 
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
 
             context.Employees.Remove(targetEmployee);
+
+            try
+            {
+                context.SaveChanges();
+            }
+
+            catch (DbUpdateException ex)
+            {
+                if (ex.GetBaseException() is SqlException sqlException)
+                {
+                    var exNum = sqlException.Number;
+
+                    if (exNum == 547)
+                    {
+                        return BadRequest("Employee cannot be deleted from history");
+                    }
+                }
+            }
 
             return Ok("Deleted");
         }
