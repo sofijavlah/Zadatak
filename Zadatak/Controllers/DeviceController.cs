@@ -56,28 +56,18 @@ namespace Zadatak.Controllers
         public IActionResult GetDeviceUseHistory(string name)
         {
 
-            //var usage = context.DeviceUsages.Where(x => x.Device.Name == name);
-
-            // var info = usage.Select(x => new UserUsageDTO
-            // {
-            //     User = x.Employee.FirstName + " " + x.Employee.LastName,
-            //     From = x.From,
-            //     To = x.To
-            // });
-
-            // return Ok(info);
-
-
             long id = context.Devices.Where(x => x.Name == name).Select(x => x.Id).First();
 
             var usages = context.DeviceUsages.Where(x => x.Device.Id == id).GroupBy(x => x.Device.Name).Select(x => new
             {
-                device = x.Key,
-                user = x.Select(u => u.Employee.FirstName + " " + u.Employee.LastName, new UserUsageDTO
+                Device = x.Key,
+                Usages = x.Select(u =>  new UserUsageDTO
                 {
-                    To
-                }),
-            });
+                    User = u.Employee.FirstName + " " + u.Employee.LastName,
+                    From = u.From,
+                    To = u.To
+                })
+            }).OrderBy(d => d.Usages.OrderBy(f => f.From));
 
             return Ok(usages);
 
