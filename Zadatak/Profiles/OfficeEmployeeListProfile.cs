@@ -15,6 +15,9 @@ namespace Zadatak.Profiles
             CreateMap<Office, OfficeEmployeeListDTO>()
                 .ForMember(dest => dest.OfficeName, source => source.MapFrom(src => src.Description))
                 .ForMember(dest => dest.Employees, source => source.MapFrom(src => src.Employees));
+            CreateMap<OfficeEmployeeListDTO, Office>()
+                .ForMember(dest => dest.Description, source => source.MapFrom(src => src.OfficeName))
+                .ForMember(dest => dest.Employees, source => source.MapFrom(src => src.Employees));
         }
     }
 }

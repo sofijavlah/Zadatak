@@ -70,12 +70,6 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(Zadatak.Models.WorkContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
-            </summary>
-            <param name="contextt">The contextt.</param>
-        </member>
         <member name="M:Zadatak.Controllers.EmployeeController.GetEmployees">
             <summary>
             Gets the employees.

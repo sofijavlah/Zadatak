@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -21,18 +22,13 @@ namespace Zadatak.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly WorkContext context;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
-        /// </summary>
-        /// <param name="contextt">The contextt.</param>
-        public EmployeeController(WorkContext contextt)
+        public EmployeeController(IMapper mapper, WorkContext contextt)
         {
             context = contextt;
-            context.Employees.Include(employee => employee.Office).Include(employee => employee.Devices);
-            context.SaveChanges();
-
+            _mapper = mapper;
         }
 
         // GET: api/Employee
@@ -64,14 +60,9 @@ namespace Zadatak.Controllers
 
             if (targetEmployee == null) return NotFound();
 
-            var employeeInfo = new EmployeeOfficeInfoDTO
-            {
-                FName = targetEmployee.FirstName,
-                LName = targetEmployee.LastName,
-                OfficeName = targetEmployee.Office.Description
-            };
+            var employeeDto = _mapper.Map<Employee, Employee>(targetEmployee);
 
-            return Ok(employeeInfo);
+            return Ok(employeeDto);
         }
 
         // GET: api/Employee/5
