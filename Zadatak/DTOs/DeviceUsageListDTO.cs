@@ -9,6 +9,6 @@ namespace Zadatak.DTOs
     {
         public string Name { get; set; }
 
-        public List<UsageDTO> Usages = new List<UsageDTO>();
+        public List<UserUsageDTO> Usages = new List<UserUsageDTO>();
     }
 }

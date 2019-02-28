@@ -39,12 +39,8 @@ namespace Zadatak.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            var employees = context.Employees.Select(em => new EmployeeDTO
-            {
-                FName = em.FirstName,
-                LName = em.FirstName
-            });
-
+            var employees = context.Offices.Include(x => x.Employees)
+                .Select(x => _mapper.Map(x, new OfficeEmployeeListDTO()));
             return Ok(employees);
         }
 
@@ -60,9 +56,7 @@ namespace Zadatak.Controllers
 
             if (targetEmployee == null) return NotFound();
 
-            var employeeDto = _mapper.Map<Employee, Employee>(targetEmployee);
-
-            return Ok(employeeDto);
+            return Ok(_mapper.Map(targetEmployee, new EmployeeDTO()));
         }
 
         // GET: api/Employee/5

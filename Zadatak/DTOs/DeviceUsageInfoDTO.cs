@@ -7,7 +7,9 @@ namespace Zadatak.DTOs
 {
     public class DeviceUsageInfoDTO
     {
-        public string Name { get; set; }
+        public string FName { get; set; }
+
+        public string LName { get; set; }
 
         public DateTime? To { get; set; }
 

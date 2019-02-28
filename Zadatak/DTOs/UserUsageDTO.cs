@@ -8,7 +8,9 @@ namespace Zadatak.DTOs
 {
     public class UserUsageDTO
     {
-        public string User { get; set; }
+        public string UserFN { get; set; }
+
+        public string UserLN { get; set; }
 
         public DateTime? To { get; set; }
 

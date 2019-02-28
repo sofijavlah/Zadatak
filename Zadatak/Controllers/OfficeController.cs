@@ -58,9 +58,7 @@ namespace Zadatak.Controllers
 
             if (targetOffice == null) return NotFound("Office doesn't exist");
 
-            var officeInfo = _mapper.Map<Office, OfficeEmployeeListDTO>(targetOffice);
-
-            return Ok(officeInfo);
+            return Ok(_mapper.Map(targetOffice, new OfficeEmployeeListDTO()));;
         }
 
         // POST: api/Office 
@@ -74,14 +72,8 @@ namespace Zadatak.Controllers
         {
            if (context.Offices.FirstOrDefault(x => x.Description == o.OfficeName) != null) return BadRequest("Office already exists");
 
-            var newOffice = new Office
-            {
-                Description = o.OfficeName
-            };
-
-            var officeDto = _mapper.Map<Office, OfficeDTO>(newOffice);
-
-            newOffice = _mapper.Map<OfficeDTO, Office>(officeDto);
+            var newOffice = new Office();
+            _mapper.Map(o, newOffice);
 
             context.Offices.Add(newOffice);
             context.SaveChanges();
@@ -101,49 +93,12 @@ namespace Zadatak.Controllers
             if (context.Offices.Count(of => of.Description == o.OfficeName) > 0) return BadRequest("Office Already Exists");
 
             var newOffice = new Office();
-            var newEmployees = new List<Employee>();
-            newOffice.Employees = newEmployees;
-
-            newOffice = _mapper.Map<OfficeEmployeeListDTO, Office>(o);
+            _mapper.Map(o, newOffice);
 
             context.Add(newOffice);
-            //context.SaveChanges();
-
-            
-            //newOffice.Employees = new List<Employee>();
-            //context.SaveChanges();
-
-            //var employeesDto = o.Employees.Select(x => _mapper.Map<EmployeeDTO, Employee>(x));
-            //o.Employees.Select(x => _mapper.Map<EmployeeDTO, Employee>(x));
-            //newOffice.Employees = newEmployees;
             context.SaveChanges();
+
             return Ok("Added Office and Employees");
-
-            //Office office = new Office();
-            //office.Description = o.OfficeName;
-
-            //context.Offices.Add(office);
-            //context.SaveChanges();
-
-            ////office.Employees = new List<Employee>();
-            ////context.SaveChanges();
-
-            //foreach (EmployeeDTO employee in o.Employees)
-            //{
-            //    context.Employees.Add(new Employee
-            //    {
-            //        FirstName = employee.FName,
-            //        LastName = employee.LName,
-            //        Office = office
-            //    });
-
-            //    //context.Employees.Add(_mapper.Map<EmployeeDTO, Employee>(employee));
-            //    context.SaveChanges();
-            //}
-
-            //context.SaveChanges();
-
-            return Ok("Added");
         }
 
         // PUT: api/Office/5
@@ -156,15 +111,15 @@ namespace Zadatak.Controllers
         [HttpPut("{id}")]
         public IActionResult ChangeOfficeName(long id, [FromQuery] OfficeDTO o)
         {
-            if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
+            var targetOffice = context.Offices.FirstOrDefault(of => of.Id == id);
 
-            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).FirstOrDefault();
+            if (targetOffice == null) return NotFound("Office doesn't exist");
 
-            targetOffice.Description = o.OfficeName;
+            _mapper.Map(o, targetOffice);
 
             context.SaveChanges();
 
-            return Ok("Modified Office name");
+            return Ok("Changed Office name");
         }
 
         // PUT: api/Office/5
@@ -175,24 +130,14 @@ namespace Zadatak.Controllers
         /// <param name="o">The o.</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult ChangeOfficeContent(long id, [FromQuery] OfficeEmployeeListDTO o)
+        public IActionResult ChangeOfficeContent(long id, OfficeEmployeeListDTO o)
         {
             if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
             
             var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).FirstOrDefault();
 
-            targetOffice.Description = o.OfficeName;
-            targetOffice.Employees = new List<Employee>();
-
-            foreach (EmployeeDTO employee in o.Employees)
-            {
-                targetOffice.Employees.Add(new Employee
-                {
-                    FirstName = employee.FName,
-                    LastName = employee.LName
-                });
-            }
-          
+            _mapper.Map(o, targetOffice);
+            
             context.SaveChanges();
 
             return Ok("Modified Office content");
