@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Zadatak.Migrations
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.EntityFrameworkCore.Migrations.Migration" />
     public partial class Prva : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
