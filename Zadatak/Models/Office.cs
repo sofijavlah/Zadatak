@@ -12,5 +12,15 @@ namespace Zadatak.Models
         public string Description { get; set; }
 
         public List<Employee> Employees { get; set; } = new List<Employee>();
+
+        public override bool Equals(object obj)
+        {
+            var office = obj as Office;
+            if (office == null) return false;
+
+            if (Description != office.Description) return false;
+
+            return true;
+        }
     }
 }

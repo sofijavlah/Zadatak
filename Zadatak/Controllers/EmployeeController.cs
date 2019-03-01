@@ -52,7 +52,7 @@ namespace Zadatak.Controllers
         [HttpGet("{id}")]
         public IActionResult GetEmployee(long id)
         {
-            var targetEmployee = context.Employees.Include(e => e.Office).FirstOrDefault(x => x.Id == id);
+            var targetEmployee = context.Employees.FirstOrDefault(x => x.Id == id);
 
             if (targetEmployee == null) return NotFound();
 
@@ -63,53 +63,39 @@ namespace Zadatak.Controllers
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="e">The e.</param>
         /// <returns></returns>
-        [HttpGet("{fName}/{lName}")]
-        public IActionResult GetEmployeeUseHistory(string fName, string lName)
+        [HttpGet]
+        public IActionResult GetEmployeeUseHistory([FromQuery] EmployeeDTO e)
         {
-            var targetEmployee = context.Employees.Include(e => e.Office).Include(e => e.Devices)
-                .FirstOrDefault(x => x.FirstName == fName && x.LastName == lName);
+            var employee =
+                context.Employees.FirstOrDefault(
+                    x => x.FirstName == e.FName && x.LastName == e.LName);
 
-            if (targetEmployee == null) return NotFound();
+            if (employee == null) return NotFound("Employee doesn't exist");
 
+            if (employee.UsageList.Count <= 0) return Ok("Employee hasn't used any device yet");
 
-            var employee = new EmployeeOfficeInfoDeviceListDTO
-            {
-                FName = targetEmployee.FirstName,
-                LName = targetEmployee.LastName,
-                OfficeName = targetEmployee.Office.Description,
-                DeviceUsageList = targetEmployee.UsageList.Select(x => new DeviceUsageInfoDTO()
-                {
-                    Name = x.Device.Name,
-                    From = x.From,
-                    To = x.To
-                })
-            };
+            var history = _mapper.Map<Employee, EmployeeDeviceUsageListDTO>(employee);
 
-            return Ok(employee);
+            return Ok(history);
         }
+
 
         /// <summary>
         /// Gets the employee office.
         /// </summary>
-        /// <param name="fName">Name of the f.</param>
-        /// <param name="lName">Name of the l.</param>
+        /// <param name="e">The e.</param>
         /// <returns></returns>
-        [HttpGet("{fName}/{lName}")]
-        public IActionResult GetEmployeeOffice(string fName, string lName)
+        [HttpGet]
+        public IActionResult GetEmployeeOffice([FromQuery] EmployeeDTO e)
         {
-            var targetEmployee = context.Employees.Include(e => e.Office)
-                .FirstOrDefault(x => x.FirstName == fName && x.LastName == lName);
+            var targetEmployee = context.Employees.Include(x => x.Office)
+                .FirstOrDefault(x => x.FirstName == e.FName && x.LastName == e.LName);
 
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
 
-            OfficeDTO office = new OfficeDTO
-            {
-                OfficeName = targetEmployee.Office.Description
-            };
-
-            return Ok(office);
+            return Ok(_mapper.Map(targetEmployee.Office, new OfficeDTO()));
         }
 
         /// <summary>
@@ -118,19 +104,14 @@ namespace Zadatak.Controllers
         /// <param name="device">The device.</param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetDeviceUser([FromQuery]DeviceDTO device)
+        public IActionResult GetDeviceUser([FromQuery]DeviceDTO d)
         {
             var targetDevice = context.Devices.Include(x => x.Employee)
-                .FirstOrDefault(x => x.Name == device.Name);
+                .FirstOrDefault(x => x.Name == d.Name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var targetEmployee = new EmployeeDTO
-            {
-                FName = targetDevice.Employee.FirstName,
-                LName = targetDevice.Employee.LastName
-            };
-
+            var targetEmployee = _mapper.Map<Employee, EmployeeDTO>(targetDevice.Employee);
             return Ok(targetEmployee);
         }
 
@@ -139,41 +120,30 @@ namespace Zadatak.Controllers
         /// Adds the employee to office.
         /// </summary>
         /// <param name="e">The e.</param>
+        /// <param name="o">The o.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddEmployeeToOffice([FromQuery] EmployeeOfficeInfoDTO e)
+        public IActionResult AddEmployeeToOffice([FromQuery] EmployeeDTO e, [FromQuery] OfficeDTO o)
         {
-            var broj = context.Offices.Count(o => o.Description == e.OfficeName);
+            var office = context.Offices.Include(x => x.Employees)
+                .FirstOrDefault(x => x.Description == o.OfficeName);
 
-            if (broj == 0)
+            if (office == null)
             {
-                Office o = new Office();
-                o.Description = e.OfficeName;
+                var newOffice = _mapper.Map<OfficeDTO, Office>(o);
+                context.SaveChanges();
 
-                context.Offices.Add(o);
+                var newEmployee = _mapper.Map<EmployeeDTO, Employee>(e);
+
+                newOffice.Employees.Add(newEmployee);
+                context.Offices.Add(newOffice);
 
                 context.SaveChanges();
 
-                Employee newEmployee = new Employee();
-                newEmployee.FirstName = e.FName;
-                newEmployee.LastName = e.LName;
-                newEmployee.Office = o;
-
-                context.Employees.Add(newEmployee);
-
-                context.SaveChanges();
-
-                return Ok("Added Employee and Office");
+                return Ok("Added Office and Employee");
             }
 
-            var office = context.Offices.Include(o => o.Employees).First(o => o.Description == e.OfficeName);
-
-            Employee employee = new Employee();
-            employee.FirstName = e.FName;
-            employee.LastName = e.LName;
-            employee.OfficeId = office.Id;
-
-            context.Employees.Add(employee);
+            office.Employees.Add(_mapper.Map(e, new Employee()));
             context.SaveChanges();
 
             return Ok("Added Employee");
@@ -191,18 +161,17 @@ namespace Zadatak.Controllers
         {
 
             var targetEmployee = context.Employees.Include(em => em.Office).FirstOrDefault(em => em.Id == id);
-
+            
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
 
-            targetEmployee.FirstName = e.FName;
-            targetEmployee.LastName = e.LName;
+            _mapper.Map(e, targetEmployee);
 
             context.SaveChanges();
 
             return Ok("Modified Employee name");
         }
 
-        
+
 
         // DELETE: api/ApiWithActions/5
         /// <summary>

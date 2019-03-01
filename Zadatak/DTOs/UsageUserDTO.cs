@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Zadatak.DTOs
 {
-    public class UserUsageDTO
+    public class UsageUserDTO
     {
         public string UserFN { get; set; }
 
         public string UserLN { get; set; }
 
-        public DateTime? To { get; set; }
-
         public DateTime From { get; set; }
+
+        public DateTime? To { get; set; }
     }
 }

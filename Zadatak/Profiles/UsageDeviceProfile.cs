@@ -8,14 +8,18 @@ using Zadatak.Models;
 
 namespace Zadatak.Profiles
 {
-    public class DeviceUsageInfoProfile : Profile
+    public class UsageDeviceProfile : Profile
     {
-        public DeviceUsageInfoProfile()
+        public UsageDeviceProfile()
         {
-            CreateMap<DeviceUsage, DeviceUsageInfoDTO>()
+            CreateMap<DeviceUsage, UsageDeviceDTO>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Device.Name))
                 .ForMember(dest => dest.From, source => source.MapFrom(src => src.From))
                 .ForMember(dest => dest.To, source => source.MapFrom(src => src.To));
+            CreateMap<DeviceUsage, UsageDeviceDTO>()
+                .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Device.Name))
+                .ForMember(dest => dest.From, source => source.MapFrom(src => src.From))
+                .ForMember(dest => dest.To, source => source.MapFrom(src => src.To)).ReverseMap();
         }
     }
 }

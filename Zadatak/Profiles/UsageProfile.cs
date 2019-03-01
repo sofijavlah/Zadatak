@@ -12,8 +12,12 @@ namespace Zadatak.Profiles
     {
         public UsageProfile()
         {
-            CreateMap<DeviceUsage, UsageDTO>().ForMember(dest => dest.From, source => source.MapFrom(src => src.From))
+            CreateMap<DeviceUsage, UsageDTO>()
+                .ForMember(dest => dest.From, source => source.MapFrom(src => src.From))
                 .ForMember(dest => dest.To, source => source.MapFrom(src => src.To));
+            CreateMap<DeviceUsage, UsageDTO>()
+                .ForMember(dest => dest.From, source => source.MapFrom(src => src.From))
+                .ForMember(dest => dest.To, source => source.MapFrom(src => src.To)).ReverseMap();
         }
     }
 }

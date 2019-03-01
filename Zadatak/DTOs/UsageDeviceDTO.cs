@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace Zadatak.DTOs
 {
-    public class DeviceUserInfoDTO
+    public class UsageDeviceDTO
     {
         public string Name { get; set; }
 
-        public string User { get; set; }
+        public DateTime From { get; set; }
+
+        public DateTime? To { get; set; }
     }
 }

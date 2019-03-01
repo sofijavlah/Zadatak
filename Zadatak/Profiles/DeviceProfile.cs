@@ -12,8 +12,8 @@ namespace Zadatak.Profiles
     {
         public DeviceProfile()
         {
-            CreateMap<Device, DeviceUsageListDTO>().ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Usages, source => source.MapFrom(src => src.UsageList));
+            CreateMap<Device, DeviceDTO>()
+                .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name));
         }
     }
 }

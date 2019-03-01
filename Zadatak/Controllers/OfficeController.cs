@@ -26,6 +26,11 @@ namespace Zadatak.Controllers
         private readonly IMapper _mapper;
         private readonly WorkContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OfficeController"/> class.
+        /// </summary>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="contextt">The contextt.</param>
         public OfficeController(IMapper mapper, WorkContext contextt)
         {
             context = contextt;

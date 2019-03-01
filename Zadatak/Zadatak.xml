@@ -10,28 +10,24 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.#ctor(Zadatak.Models.WorkContext)">
-            <summary>Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.</summary>
-            <param name="contextt">The contextt.</param>
-        </member>
         <member name="M:Zadatak.Controllers.DeviceController.GetDeviceList">
             <summary>Gets the device list.</summary>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(System.String)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(Zadatak.Models.DeviceDTO)">
             <summary>
             Gets the device use history.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(System.String)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(Zadatak.Models.DeviceDTO)">
             <summary>
             Gets the device current information.
             </summary>
             <param name="name">The name.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.DTOs.DeviceUserInfoDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.Models.DeviceDTO,Zadatak.Models.EmployeeDTO)">
             <summary>
             Adds the device.
             </summary>
@@ -48,7 +44,7 @@
             <param name="device">The device.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.DTOs.DeviceUserInfoDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.Models.DeviceDTO,Zadatak.Models.EmployeeDTO)">
             <summary>
             Changes the device user.
             </summary>
@@ -83,19 +79,18 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(System.String,System.String)">
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(Zadatak.Models.EmployeeDTO)">
             <summary>
             Gets the employee use history.
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeOffice(System.String,System.String)">
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeOffice(Zadatak.Models.EmployeeDTO)">
             <summary>
             Gets the employee office.
             </summary>
-            <param name="fName">Name of the f.</param>
-            <param name="lName">Name of the l.</param>
+            <param name="e">The e.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.GetDeviceUser(Zadatak.Models.DeviceDTO)">
@@ -105,11 +100,12 @@
             <param name="device">The device.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.DTOs.EmployeeOfficeInfoDTO)">
+        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.Models.EmployeeDTO,Zadatak.Models.OfficeDTO)">
             <summary>
             Adds the employee to office.
             </summary>
             <param name="e">The e.</param>
+            <param name="o">The o.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">

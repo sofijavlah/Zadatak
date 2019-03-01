@@ -19,5 +19,15 @@ namespace Zadatak.Models
         public Employee Employee { get; set; }
 
         public List<DeviceUsage> UsageList { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var device = obj as Device;
+            if (device == null) return false;
+
+            if (Name != device.Name) return false;
+
+            return true;
+        }
     }
 }

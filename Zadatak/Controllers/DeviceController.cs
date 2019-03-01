@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,15 +24,13 @@ namespace Zadatak.Controllers
     [ApiController]
     public class DeviceController : ControllerBase
     {
-
+        private readonly IMapper _mapper;
         private readonly WorkContext context;
 
-        /// <summary>Initializes a new instance of the <see cref="DeviceController"/> class.</summary>
-        /// <param name="contextt">The contextt.</param>
-        public DeviceController(WorkContext contextt)
+        public DeviceController(IMapper mapper, WorkContext contextt)
         {
             context = contextt;
-            context.SaveChanges();
+            _mapper = mapper;
         }
 
         // GET: api/Device
@@ -40,10 +39,7 @@ namespace Zadatak.Controllers
         [HttpGet]
         public IActionResult GetDeviceList()
         {
-            var devices = context.Devices.Select(d => new DeviceDTO
-            {
-                Name = d.Name
-            });
+            var devices = context.Devices.Select(x => _mapper.Map(x, new DeviceDTO()));
 
             return Ok(devices);
         }
@@ -54,25 +50,15 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetDeviceUseHistory(string name)
+        public IActionResult GetDeviceUseHistory([FromQuery] DeviceDTO d)
         {
+            var targetDevice = context.Devices.FirstOrDefault(x => x.Name == d.Name);
 
-            long id = context.Devices.Where(x => x.Name == name).Select(x => x.Id).First();
+            if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var usages = context.DeviceUsages.Where(x => x.Device.Id == id).GroupBy(x => x.Device.Name).Select(x => new
-            {
-                Device = x.Key,
-                Usages = x.Select(u =>  new UserUsageDTO
-                {
-                    User = u.Employee.FirstName + " " + u.Employee.LastName,
-                    From = u.From,
-                    To = u.To
-                })
-            }).OrderBy(d => d.Usages.OrderBy(f => f.From));
+            var usages = targetDevice.UsageList.Select(x => _mapper.Map(x, new DeviceUsageListDTO()));
 
             return Ok(usages);
-
-
         }
 
         /// <summary>
@@ -81,27 +67,17 @@ namespace Zadatak.Controllers
         /// <param name="name">The name.</param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetDeviceCurrentInfo(string name)
+        public IActionResult GetDeviceCurrentInfo([FromQuery] DeviceDTO d)
         {
-            var targetDevice = context.Devices.Include(d => d.Employee).Include(d => d.UsageList)
-                .FirstOrDefault(d => d.Name == name);
+            var targetDevice = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
+                .FirstOrDefault(x => x.Name == d.Name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var usage = targetDevice.UsageList.Where(x => x.To == null).Select(u => new UsageDTO
-            {
-                From = u.From,
-                To = u.To,
-            }).First();
+            var currentUsage = targetDevice.UsageList.Where(x => x.To == null)
+                .Select(x => _mapper.Map(x, new UsageUserDTO()));
 
-            var userInfo = new UserUsageDTO
-            {
-                User = targetDevice.Employee.FirstName + " " + targetDevice.Employee.LastName,
-                From = usage.From,
-                To = usage.To
-            };
-
-            return Ok(userInfo);
+            return Ok(currentUsage);
         }
         
 
@@ -114,47 +90,26 @@ namespace Zadatak.Controllers
         /// Appropriate message if device was added, if it already exists or if employee wasn't found.
         /// </returns>
         [HttpPost]
-        public IActionResult AddDevice([FromQuery]DeviceUserInfoDTO d)
+        public IActionResult AddDevice([FromQuery]DeviceDTO d, [FromQuery] EmployeeDTO e)
         {
-            var device = context.Devices.Include(x => x.UsageList).Include(x => x.Employee).ThenInclude(x => x.Office)
+            var device = context.Devices.Include(x => x.UsageList).Include(x => x.Employee)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device != null) return BadRequest("Device Already Exists");
-
-            var employee = context.Employees.Include(x => x.Devices)
-                .FirstOrDefault(x => x.FirstName + " " + x.LastName == d.User);
+            
+            var employee = context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.Equals(_mapper.Map(e, x)));
 
             if (employee == null) return BadRequest("Employee doesn't exist");
 
-            var newDevice = new Device();
-            context.SaveChanges();
+            var newDevice = _mapper.Map(d, new Device());
+            employee.Devices.Add(new Device());
 
-            newDevice.Name = d.Name;
-            newDevice.Employee = employee;
-
-            var newUsage = new DeviceUsage();
-            context.SaveChanges();
-
-            newUsage.Employee = employee;
-            newUsage.Device = newDevice;
-            newUsage.From = DateTime.Now;
-            newUsage.To = null;
+            newDevice.UsageList.Add(new DeviceUsage
+            {
+                From = DateTime.Now,
+                To = null
+            });
            
-            context.Devices.Add(newDevice);
-            context.SaveChanges();
-
-            context.DeviceUsages.Add(newUsage);
-            context.SaveChanges();
-
-            newDevice.UsageList.Add(newUsage);
-            employee.UsageList.Add(newUsage);
-            employee.Devices.Add(newDevice);
-
-            //newDevice.UsageList.Add(newUsage);
-            context.SaveChanges();
-            context.DeviceUsages.Add(newUsage);
-            //employee.Devices.Add(newDevice);
-            //context.SaveChanges();
             return Ok("Added Device");
         }
 
@@ -172,8 +127,9 @@ namespace Zadatak.Controllers
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            targetDevice.Name = device.Name;
+            _mapper.Map(device, targetDevice);
             context.SaveChanges();
+
             return Ok("Changed Device name");
         }
 
@@ -185,7 +141,7 @@ namespace Zadatak.Controllers
         /// <param name="d">The d.</param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult ChangeDeviceUser([FromQuery]DeviceUserInfoDTO d)
+        public IActionResult ChangeDeviceUser([FromQuery]DeviceDTO d, [FromQuery] EmployeeDTO e)
         {
             var device = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
                 .FirstOrDefault(x => x.Name == d.Name);
@@ -195,34 +151,24 @@ namespace Zadatak.Controllers
             var oldUser = device.Employee;
 
             var newUser = context.Employees.Include(x => x.Devices)
-                .FirstOrDefault(x => x.FirstName + " " + x.LastName == d.User);
+                .FirstOrDefault(x => x.FirstName == e.FName && x.LastName == e.LName);
 
             if (newUser == null) return BadRequest("Employee doesn't exist");
 
-            var oldUsage = oldUser.UsageList.First(x => x.Device.Name == d.Name);
-            oldUsage.To = DateTime.Now;
+            device.Employee.UsageList.First(x => x.Device.Name == d.Name).To = DateTime.Now;
 
             context.SaveChanges();
             
-            device.Name = d.Name;
-
-            DeviceUsage newDeviceUsage = new DeviceUsage
+            DeviceUsage newUsage = new DeviceUsage
             {
                 From = DateTime.Now,
                 To = null
             };
 
-            device.Employee = newUser;
-
-            newDeviceUsage.Employee = newUser;
-            newDeviceUsage.Device = device;
-
-            device.UsageList.Add(newDeviceUsage);
-            context.SaveChanges();
-
             newUser.Devices.Add(device);
-            newUser.UsageList.Add(newDeviceUsage);
-            context.DeviceUsages.Add(newDeviceUsage);
+            newUser.UsageList.Add(newUsage);
+            device.UsageList.Add(newUsage);
+            context.SaveChanges();
 
             return Ok("Changed User");
         }

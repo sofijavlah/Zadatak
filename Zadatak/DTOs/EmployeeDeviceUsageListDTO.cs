@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zadatak.Models;
 
 namespace Zadatak.DTOs
 {
-    public class DeviceUsageInfoDTO
+    public class EmployeeDeviceUsageListDTO
     {
         public string FName { get; set; }
 
         public string LName { get; set; }
 
-        public DateTime? To { get; set; }
-
-        public DateTime From { get; set; }
+        public List<UsageDeviceDTO> Usages { get; set; }
     }
 }
