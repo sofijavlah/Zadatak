@@ -27,7 +27,7 @@
             <param name="name">The name.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.Models.DeviceDTO,Zadatak.Models.EmployeeDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.Models.DeviceDTO)">
             <summary>
             Adds the device.
             </summary>
@@ -44,7 +44,7 @@
             <param name="device">The device.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.Models.DeviceDTO,Zadatak.Models.EmployeeDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.Models.DeviceDTO)">
             <summary>
             Changes the device user.
             </summary>
@@ -100,9 +100,9 @@
             <param name="device">The device.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.Models.EmployeeDTO,Zadatak.Models.OfficeDTO)">
+        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.Models.EmployeeDTO)">
             <summary>
-            Adds the employee to office.
+            Adds the employee to office. If the office doesn't exists, it adds a new office
             </summary>
             <param name="e">The e.</param>
             <param name="o">The o.</param>
@@ -114,6 +114,14 @@
             </summary>
             <param name="id">The identifier.</param>
             <param name="e">The e.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeOffice(System.Int64,Zadatak.Models.OfficeDTO)">
+            <summary>
+            Changes the employee office.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="o">The o.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.Delete(System.Int64)">
@@ -129,13 +137,6 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.Controllers.OfficeController"/> class.
-            </summary>
-            <param name="mapper">The mapper.</param>
-            <param name="contextt">The contextt.</param>
-        </member>
         <member name="M:Zadatak.Controllers.OfficeController.GetOffices">
             <summary>
             Gets the offices.
@@ -149,16 +150,9 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.AddOffice(Zadatak.Models.OfficeDTO)">
+        <member name="M:Zadatak.Controllers.OfficeController.PostOffice(Zadatak.Models.OfficeDTO)">
             <summary>
             Adds the office.
-            </summary>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.AddOfficeAndEmployees(Zadatak.DTOs.OfficeEmployeeListDTO)">
-            <summary>
-            Adds the office and employees.
             </summary>
             <param name="o">The o.</param>
             <returns></returns>
@@ -179,7 +173,7 @@
             <param name="o">The o.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.DeleteOfficeAndEmployees(System.Int64)">
+        <member name="M:Zadatak.Controllers.OfficeController.DeleteOffice(System.Int64)">
             <summary>
             Deletes the office and employees.
             </summary>

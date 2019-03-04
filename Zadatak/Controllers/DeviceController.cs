@@ -52,11 +52,11 @@ namespace Zadatak.Controllers
         [HttpGet]
         public IActionResult GetDeviceUseHistory([FromQuery] DeviceDTO d)
         {
-            var targetDevice = context.Devices.FirstOrDefault(x => x.Name == d.Name);
+            var targetDevice = context.Devices.Include(x => x.Employee).Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Name == d.Name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var usages = targetDevice.UsageList.Select(x => _mapper.Map(x, new DeviceUsageListDTO()));
+            var usages = _mapper.Map(targetDevice, new DeviceUsageListDTO());
 
             return Ok(usages);
         }
@@ -90,25 +90,27 @@ namespace Zadatak.Controllers
         /// Appropriate message if device was added, if it already exists or if employee wasn't found.
         /// </returns>
         [HttpPost]
-        public IActionResult AddDevice([FromQuery]DeviceDTO d, [FromQuery] EmployeeDTO e)
+        public IActionResult AddDevice([FromQuery]DeviceDTO d)
         {
             var device = context.Devices.Include(x => x.UsageList).Include(x => x.Employee)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device != null) return BadRequest("Device Already Exists");
             
-            var employee = context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.Equals(_mapper.Map(e, x)));
+            var employee = context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
 
             if (employee == null) return BadRequest("Employee doesn't exist");
 
             var newDevice = _mapper.Map(d, new Device());
-            employee.Devices.Add(new Device());
+            employee.Devices.Add(newDevice);
 
             newDevice.UsageList.Add(new DeviceUsage
             {
+                Employee = employee,
                 From = DateTime.Now,
                 To = null
             });
+            context.SaveChanges();
            
             return Ok("Added Device");
         }
@@ -141,24 +143,22 @@ namespace Zadatak.Controllers
         /// <param name="d">The d.</param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult ChangeDeviceUser([FromQuery]DeviceDTO d, [FromQuery] EmployeeDTO e)
+        public IActionResult ChangeDeviceUser([FromQuery]DeviceDTO d)
         {
             var device = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device == null) return NotFound("Device doesn't exist");
-
-            var oldUser = device.Employee;
-
+            
             var newUser = context.Employees.Include(x => x.Devices)
-                .FirstOrDefault(x => x.FirstName == e.FName && x.LastName == e.LName);
+                .FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
 
             if (newUser == null) return BadRequest("Employee doesn't exist");
 
             device.Employee.UsageList.First(x => x.Device.Name == d.Name).To = DateTime.Now;
 
             context.SaveChanges();
-            
+
             DeviceUsage newUsage = new DeviceUsage
             {
                 From = DateTime.Now,
@@ -172,6 +172,7 @@ namespace Zadatak.Controllers
 
             return Ok("Changed User");
         }
+
 
         // DELETE: api/ApiWithActions/5
         /// <summary>

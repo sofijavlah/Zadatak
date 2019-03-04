@@ -9,5 +9,8 @@ namespace Zadatak.Models
     {
         public string Name { get; set; }
 
+        public string UserFn { get; set; }
+
+        public string UserLn { get; set; }
     }
 }

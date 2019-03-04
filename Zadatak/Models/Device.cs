@@ -18,7 +18,7 @@ namespace Zadatak.Models
         [ForeignKey("EmployeeId")]
         public Employee Employee { get; set; }
 
-        public List<DeviceUsage> UsageList { get; set; }
+        public List<DeviceUsage> UsageList { get; set; } = new List<DeviceUsage>();
 
         public override bool Equals(object obj)
         {

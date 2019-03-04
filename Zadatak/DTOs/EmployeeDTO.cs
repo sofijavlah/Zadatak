@@ -10,5 +10,7 @@ namespace Zadatak.Models
         public string FName { get; set; }
 
         public string LName { get; set; }
+
+        public string OfficeName { get; set; }
     }
 }

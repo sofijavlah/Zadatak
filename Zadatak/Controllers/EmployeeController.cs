@@ -111,33 +111,34 @@ namespace Zadatak.Controllers
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var targetEmployee = _mapper.Map<Employee, EmployeeDTO>(targetDevice.Employee);
-            return Ok(targetEmployee);
+            return Ok(_mapper.Map(targetDevice.Employee, new EmployeeDTO()));
         }
 
         // POST: api/Employee
         /// <summary>
-        /// Adds the employee to office.
+        /// Adds the employee to office. If the office doesn't exists, it adds a new office
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="o">The o.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddEmployeeToOffice([FromQuery] EmployeeDTO e, [FromQuery] OfficeDTO o)
+        public IActionResult AddEmployeeToOffice([FromQuery] EmployeeDTO e)
         {
             var office = context.Offices.Include(x => x.Employees)
-                .FirstOrDefault(x => x.Description == o.OfficeName);
+                .FirstOrDefault(x => x.Description == e.OfficeName);
 
             if (office == null)
             {
-                var newOffice = _mapper.Map<OfficeDTO, Office>(o);
+                office = new Office
+                {
+                    Description = e.OfficeName
+                };
                 context.SaveChanges();
 
                 var newEmployee = _mapper.Map<EmployeeDTO, Employee>(e);
+                office.Employees.Add(newEmployee);
 
-                newOffice.Employees.Add(newEmployee);
-                context.Offices.Add(newOffice);
-
+                context.Offices.Add(office);
                 context.SaveChanges();
 
                 return Ok("Added Office and Employee");
@@ -148,6 +149,7 @@ namespace Zadatak.Controllers
 
             return Ok("Added Employee");
         }
+
 
         // PUT: api/Employee/5
         /// <summary>
