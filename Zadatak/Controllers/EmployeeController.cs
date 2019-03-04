@@ -159,7 +159,6 @@ namespace Zadatak.Controllers
         [HttpPut("{id}")]
         public IActionResult ChangeEmployeeName(long id, [FromQuery]EmployeeDTO e)
         {
-
             var targetEmployee = context.Employees.Include(em => em.Office).FirstOrDefault(em => em.Id == id);
             
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
@@ -169,6 +168,36 @@ namespace Zadatak.Controllers
             context.SaveChanges();
 
             return Ok("Modified Employee name");
+        }
+
+        // PUT: api/Employee/5
+        /// <summary>
+        /// Changes the employee office.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public IActionResult ChangeEmployeeOffice(long id, [FromQuery] OfficeDTO o)
+        {
+            var targetEmployee = context.Employees.Include(x => x.Office).FirstOrDefault(x => x.Id == id);
+
+            if (targetEmployee == null) return NotFound("Employee doesn't exist");
+
+            var newOffice = context.Offices.Include(x => x.Employees)
+                .FirstOrDefault(x => x.Description == o.OfficeName);
+
+            if (newOffice == null) return BadRequest("Office doesn't exist");
+
+            var oldOffice = targetEmployee.Office;
+            
+            newOffice.Employees.Add(targetEmployee);
+
+            oldOffice.Employees.Remove(targetEmployee);
+
+            context.SaveChanges();
+
+            return Ok("Changed Employee Office");
         }
 
 
