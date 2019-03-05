@@ -187,13 +187,7 @@
             <param name="e">The e.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.PostEmployee(Zadatak.Models.EmployeeDTO)">
-            <summary>
-            Posts the employee.
-            </summary>
-            <param name="e">The e.</param>
-            <returns></returns>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Zadatak.Controllers.EmployeeController.PostEmployee(Zadatak.Models.EmployeeDTO)" -->
         <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">
             <summary>
             Changes the name of the employee.
@@ -278,6 +272,11 @@
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
+        </member>
+        <member name="T:Zadatak.Models.Device">
+            <summary>
+            Device model class
+            </summary>
         </member>
         <member name="T:Zadatak.Models.DeviceUsage">
             <summary>

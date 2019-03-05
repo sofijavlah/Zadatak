@@ -179,8 +179,7 @@ namespace Zadatak.Controllers
 
             return Ok("Changed User");
         }
-
-
+        
         // DELETE: api/ApiWithActions/5
         /// <summary>
         /// Deletes the device.

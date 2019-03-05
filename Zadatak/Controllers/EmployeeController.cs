@@ -90,38 +90,45 @@ namespace Zadatak.Controllers
         }
 
         // POST: api/Employee
-        /// <summary>
+        ///// <summary>
         /// Posts the employee.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <returns></returns>
+        //[HttpPost]
+        //public IActionResult PostEmployee(EmployeeDTO e)
+        //{
+        //var office = Context.Offices.Include(x => x.Employees)
+        //    .FirstOrDefault(x => x.Description == e.Office.Description);
+
+        //if (office == null)
+        //{
+        //    office = new Office
+        //    {
+        //        Description = e.Office.Description
+        //    };
+        //    Context.SaveChanges();
+
+        //    var newEmployee = Mapper.Map<EmployeeDTO, Employee>(e);
+        //    office.Employees.Add(newEmployee);
+
+        //    Context.Offices.Add(office);
+        //    Context.SaveChanges();
+
+        //    return Ok("Added Office and Employee");
+        //}
+
+        //office.Employees.Add(Mapper.Map(e, new Employee()));
+        //Context.SaveChanges();
+
+        //return Ok("Added Employee");
+        //}
+
+        // POST: api/Employee
         [HttpPost]
         public IActionResult PostEmployee(EmployeeDTO e)
         {
-            var office = Context.Offices.Include(x => x.Employees)
-                .FirstOrDefault(x => x.Description == e.OfficeName);
-
-            if (office == null)
-            {
-                office = new Office
-                {
-                    Description = e.OfficeName
-                };
-                Context.SaveChanges();
-
-                var newEmployee = Mapper.Map<EmployeeDTO, Employee>(e);
-                office.Employees.Add(newEmployee);
-
-                Context.Offices.Add(office);
-                Context.SaveChanges();
-
-                return Ok("Added Office and Employee");
-            }
-
-            office.Employees.Add(Mapper.Map(e, new Employee()));
-            Context.SaveChanges();
-
-            return Ok("Added Employee");
+            return base.Post(e);
         }
 
         // PUT: api/Employee/5

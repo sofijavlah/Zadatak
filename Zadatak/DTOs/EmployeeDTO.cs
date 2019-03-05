@@ -11,6 +11,6 @@ namespace Zadatak.Models
 
         public string LName { get; set; }
 
-        public string OfficeName { get; set; }
+        public OfficeDTO Office { get; set; }
     }
 }

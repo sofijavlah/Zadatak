@@ -8,5 +8,7 @@ namespace Zadatak.Models
     public class OfficeDTO
     {
         public string OfficeName { get; set; }
+
+        public long OfficeId { get; set; }
     }
 }

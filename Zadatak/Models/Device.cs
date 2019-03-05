@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Zadatak.Models
 {
+    /// <summary>
+    /// Device model class
+    /// </summary>
     public class Device
     {
         public long Id { get; set; }

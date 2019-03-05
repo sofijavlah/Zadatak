@@ -12,9 +12,9 @@ namespace Zadatak.Profiles
     {
         public OfficeProfile()
         {
-            CreateMap<Office, OfficeDTO>().ForMember(dest => dest.OfficeName, source => source.MapFrom(src => src.Description));
             CreateMap<OfficeDTO, Office>()
-                .ForMember(dest => dest.Description, source => source.MapFrom(src => src.OfficeName));
+                .ForMember(dest => dest.Description, source => source.MapFrom(src => src.OfficeName))
+                .ForMember(dest => dest.Employees, source => source.Ignore());
         }
     }
 }
