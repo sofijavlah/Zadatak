@@ -4,14 +4,102 @@
         <name>Zadatak</name>
     </assembly>
     <members>
+        <member name="T:Zadatak.Controllers.BaseController`2">
+            <summary>
+            
+            </summary>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <typeparam name="TDto">The type of the dto.</typeparam>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="P:Zadatak.Controllers.BaseController`2.Mapper">
+            <summary>
+            Gets or sets the mapper.
+            </summary>
+            <value>
+            The mapper.
+            </value>
+        </member>
+        <member name="P:Zadatak.Controllers.BaseController`2.Context">
+            <summary>
+            Gets or sets the context.
+            </summary>
+            <value>
+            The context.
+            </value>
+        </member>
+        <member name="P:Zadatak.Controllers.BaseController`2.DbSet">
+            <summary>
+            Gets or sets the database set.
+            </summary>
+            <value>
+            The database set.
+            </value>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.BaseController`2"/> class.
+            </summary>
+            <param name="mapper">The mapper.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.GetAll">
+            <summary>
+            Gets all.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.Get(System.Int64)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.Post(`1)">
+            <summary>
+            Posts the specified dto.
+            </summary>
+            <param name="dto">The dto.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.Put(System.Int64,`1)">
+            <summary>
+            Puts the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="dto">The dto.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.BaseController`2.Delete(System.Int64)">
+            <summary>
+            Deletes the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Zadatak.Controllers.DeviceController">
             <summary>
             
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceList">
+        <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.
+            </summary>
+            <param name="mapper">The mapper.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.GetDevices">
             <summary>Gets the device list.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.GetDevice(System.Int64)">
+            <summary>
+            Gets the device.
+            </summary>
+            <param name="id">The identifier.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(Zadatak.Models.DeviceDTO)">
@@ -24,7 +112,7 @@
             <summary>
             Gets the device current information.
             </summary>
-            <param name="name">The name.</param>
+            <param name="d">The d.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.Models.DeviceDTO)">
@@ -41,14 +129,13 @@
             Changes the name of the device.
             </summary>
             <param name="id">The identifier.</param>
-            <param name="device">The device.</param>
+            <param name="d">The d.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.Models.DeviceDTO)">
             <summary>
             Changes the device user.
             </summary>
-            <param name="id">The identifier.</param>
             <param name="d">The d.</param>
             <returns></returns>
         </member>
@@ -65,6 +152,13 @@
             
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
+            </summary>
+            <param name="mapper">The mapper.</param>
+            <param name="context">The context.</param>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.GetEmployees">
             <summary>
@@ -93,19 +187,11 @@
             <param name="e">The e.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetDeviceUser(Zadatak.Models.DeviceDTO)">
+        <member name="M:Zadatak.Controllers.EmployeeController.PostEmployee(Zadatak.Models.EmployeeDTO)">
             <summary>
-            Gets the device user.
-            </summary>
-            <param name="device">The device.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.AddEmployeeToOffice(Zadatak.Models.EmployeeDTO)">
-            <summary>
-            Adds the employee to office. If the office doesn't exists, it adds a new office
+            Posts the employee.
             </summary>
             <param name="e">The e.</param>
-            <param name="o">The o.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">
@@ -124,7 +210,7 @@
             <param name="o">The o.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.Delete(System.Int64)">
+        <member name="M:Zadatak.Controllers.EmployeeController.DeleteEmployee(System.Int64)">
             <summary>
             Deletes the specified identifier.
             </summary>
@@ -136,6 +222,13 @@
             
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.OfficeController"/> class.
+            </summary>
+            <param name="mapper">The mapper.</param>
+            <param name="context">The context.</param>
         </member>
         <member name="M:Zadatak.Controllers.OfficeController.GetOffices">
             <summary>
@@ -150,6 +243,13 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Zadatak.Controllers.OfficeController.GetOfficeEmployees(Zadatak.Models.OfficeDTO)">
+            <summary>
+            Gets the office employees.
+            </summary>
+            <param name="o">The o.</param>
+            <returns></returns>
+        </member>
         <member name="M:Zadatak.Controllers.OfficeController.PostOffice(Zadatak.Models.OfficeDTO)">
             <summary>
             Adds the office.
@@ -160,14 +260,6 @@
         <member name="M:Zadatak.Controllers.OfficeController.ChangeOfficeName(System.Int64,Zadatak.Models.OfficeDTO)">
             <summary>
             Changes the name of the office.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.ChangeOfficeContent(System.Int64,Zadatak.DTOs.OfficeEmployeeListDTO)">
-            <summary>
-            Changes the content of the office.
             </summary>
             <param name="id">The identifier.</param>
             <param name="o">The o.</param>

@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Remotion.Linq.Clauses;
@@ -21,12 +22,12 @@ namespace Zadatak.Controllers
     [ApiController]
     public class OfficeController : BaseController<Office, OfficeDTO>
     {
-
-        private readonly IMapper _mapper;
-        private readonly WorkContext context;
-        private readonly DbSet<Office> dbSet;
-
-        public OfficeController(IMapper mapper, WorkContext contextt) : base(mapper, contextt)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OfficeController"/> class.
+        /// </summary>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="context">The context.</param>
+        public OfficeController(IMapper mapper, WorkContext context) : base(mapper, context)
         {
         }
 
@@ -36,9 +37,9 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        private IActionResult GetOffices()
+        public IActionResult GetOffices()
         {
-            return Ok(base.GetAll());
+            return base.GetAll();
         }
 
         // GET: api/Office/5
@@ -48,9 +49,26 @@ namespace Zadatak.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpGet]
-        private IActionResult GetOffice(long id)
+        public IActionResult GetOffice(long id)
         {
-            return Ok(base.Get(id));
+            return base.Get(id);
+        }
+
+        // GET: api/Office/dto
+        /// <summary>
+        /// Gets the office employees.
+        /// </summary>
+        /// <param name="o">The o.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult GetOfficeEmployees(OfficeDTO o)
+        {
+            var office = Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Description == o.OfficeName);
+            if (office == null) return BadRequest("Office doesn't exist");
+
+            var employees = office.Employees.Select(x => Mapper.Map(x, new EmployeeDTO()));
+
+            return Ok(employees);
         }
 
         // POST: api/Office 
@@ -60,32 +78,9 @@ namespace Zadatak.Controllers
         /// <param name="o">The o.</param>
         /// <returns></returns>
         [HttpPost]
-        private IActionResult PostOffice(OfficeDTO o)
+        public IActionResult PostOffice(OfficeDTO o)
         {
-            return Ok(base.Post(o));
-        }
-
-        // POST: api/Office 
-        /// <summary>
-        /// Adds the office and employees.
-        /// </summary>
-        /// <param name="o">The o.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult AddOfficeAndEmployees(OfficeEmployeeListDTO o)
-        {
-            
-            var offices = base.Post(_mapper.Map(o, new Office()));
-            var num = offices.Where(x => x.Description == o.OfficeName);
-           if (!num.Any()) return BadRequest("Office Already Exists");
-
-            var newOffice = new Office();
-            _mapper.Map(o, newOffice);
-
-            dbSet.Add(newOffice);
-            context.SaveChanges();
-
-            return Ok("Added Office and Employees");
+            return base.Post(o);
         }
 
         // PUT: api/Office/5
@@ -96,30 +91,9 @@ namespace Zadatak.Controllers
         /// <param name="o">The o.</param>
         /// <returns></returns>
         [HttpPut]
-        private IActionResult ChangeOfficeName(long id, OfficeDTO o)
+        public IActionResult ChangeOfficeName(long id, OfficeDTO o)
         {
-            return Ok(base.Put(id, o));
-        }
-
-        // PUT: api/Office/5
-        /// <summary>
-        /// Changes the content of the office.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="o">The o.</param>
-        /// <returns></returns>
-        [HttpPut]
-        public IActionResult ChangeOfficeContent(long id, OfficeEmployeeListDTO o)
-        {
-            if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
-            
-            var targetOffice = context.Offices.Where(of => of.Id == id).Include(of => of.Employees).FirstOrDefault();
-
-            _mapper.Map(o, targetOffice);
-            
-            context.SaveChanges();
-
-            return Ok("Modified Office content");
+            return base.Put(id, o);
         }
 
         // DELETE: api/ApiWithActions/5
@@ -129,9 +103,9 @@ namespace Zadatak.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpDelete]
-        private IActionResult DeleteOffice(long id)
+        public IActionResult DeleteOffice(long id)
         {
-            return Ok(base.Delete(id));
+            return base.Delete(id);
         }
 
         // DELETE: api/ApiWithActions/5
@@ -143,12 +117,13 @@ namespace Zadatak.Controllers
         [HttpDelete]
         public IActionResult DeleteJustEmployees(long id)
         {
-            if (context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
+            if (Context.Offices.Find(id) == null) return NotFound("Office doesn't exist");
 
-            var o = context.Offices.Include(of => of.Employees).FirstOrDefault(of => of.Id == id);
-            o.Employees.RemoveRange(0, count:o.Employees.Count);
+            var o = Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Id == id);
 
-            context.SaveChanges();
+            o.Employees.RemoveRange(0, o.Employees.Count);
+
+            Context.SaveChanges();
 
             return Ok("Deleted");
         }

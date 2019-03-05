@@ -20,28 +20,37 @@ namespace Zadatak.Controllers
     /// 
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
-    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class DeviceController : ControllerBase
+    public class DeviceController : BaseController<Device, DeviceDTO>
     {
-        private readonly IMapper _mapper;
-        private readonly WorkContext context;
-
-        public DeviceController(IMapper mapper, WorkContext contextt)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceController"/> class.
+        /// </summary>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="context">The context.</param>
+        public DeviceController(IMapper mapper, WorkContext context) : base(mapper, context)
         {
-            context = contextt;
-            _mapper = mapper;
         }
 
         // GET: api/Device
         /// <summary>Gets the device list.</summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetDeviceList()
+        public IActionResult GetDevices()
         {
-            var devices = context.Devices.Select(x => _mapper.Map(x, new DeviceDTO()));
+            return Ok(Context.Devices.Include(x => x.Employee).Select(x => Mapper.Map(x, new DeviceDTO())));
+        }
 
-            return Ok(devices);
+        // GET: api/Device/5
+        /// <summary>
+        /// Gets the device.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetDevice(long id)
+        {
+            return Ok(Context.Devices.Include(x => x.Employee).Where(x => x.Id == id).Select(x => Mapper.Map(x, new DeviceDTO())));
         }
 
         // GET: api/Device
@@ -49,14 +58,14 @@ namespace Zadatak.Controllers
         /// Gets the device use history.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetDeviceUseHistory([FromQuery] DeviceDTO d)
+        [HttpPost]
+        public IActionResult GetDeviceUseHistory(DeviceDTO d)
         {
-            var targetDevice = context.Devices.Include(x => x.Employee).Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Name == d.Name);
+            var targetDevice = Context.Devices.Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Name == d.Name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var usages = _mapper.Map(targetDevice, new DeviceUsageListDTO());
+            var usages = Mapper.Map(targetDevice, new DeviceUsageListDTO());
 
             return Ok(usages);
         }
@@ -64,18 +73,18 @@ namespace Zadatak.Controllers
         /// <summary>
         /// Gets the device current information.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="d">The d.</param>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetDeviceCurrentInfo([FromQuery] DeviceDTO d)
+        [HttpPost]
+        public IActionResult GetDeviceCurrentInfo(DeviceDTO d)
         {
-            var targetDevice = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
+            var targetDevice = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
             var currentUsage = targetDevice.UsageList.Where(x => x.To == null)
-                .Select(x => _mapper.Map(x, new UsageUserDTO()));
+                .Select(x => Mapper.Map(x, new UsageUserDTO()));
 
             return Ok(currentUsage);
         }
@@ -90,18 +99,18 @@ namespace Zadatak.Controllers
         /// Appropriate message if device was added, if it already exists or if employee wasn't found.
         /// </returns>
         [HttpPost]
-        public IActionResult AddDevice([FromQuery]DeviceDTO d)
+        public IActionResult AddDevice(DeviceDTO d)
         {
-            var device = context.Devices.Include(x => x.UsageList).Include(x => x.Employee)
+            var device = Context.Devices.Include(x => x.UsageList).Include(x => x.Employee)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device != null) return BadRequest("Device Already Exists");
             
-            var employee = context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
+            var employee = Context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
 
             if (employee == null) return BadRequest("Employee doesn't exist");
 
-            var newDevice = _mapper.Map(d, new Device());
+            var newDevice = Mapper.Map(d, new Device());
             employee.Devices.Add(newDevice);
 
             newDevice.UsageList.Add(new DeviceUsage
@@ -110,7 +119,7 @@ namespace Zadatak.Controllers
                 From = DateTime.Now,
                 To = null
             });
-            context.SaveChanges();
+            Context.SaveChanges();
            
             return Ok("Added Device");
         }
@@ -120,44 +129,42 @@ namespace Zadatak.Controllers
         /// Changes the name of the device.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="device">The device.</param>
+        /// <param name="d">The d.</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult ChangeDeviceName(long id, [FromQuery] DeviceDTO device)
+        [HttpPut]
+        public IActionResult ChangeDeviceName(long id, DeviceDTO d)
         {
-            var targetDevice = context.Devices.Include(d => d.Employee).FirstOrDefault(d => d.Id == id);
+            var targetDevice = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
 
             if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            _mapper.Map(device, targetDevice);
-            context.SaveChanges();
+            Mapper.Map(d, targetDevice);
+            Context.SaveChanges();
 
             return Ok("Changed Device name");
         }
 
-        // PUT: api/Device/5
         /// <summary>
         /// Changes the device user.
         /// </summary>
-        /// <param name="id">The identifier.</param>
         /// <param name="d">The d.</param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult ChangeDeviceUser([FromQuery]DeviceDTO d)
+        public IActionResult ChangeDeviceUser(DeviceDTO d)
         {
-            var device = context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
+            var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
                 .FirstOrDefault(x => x.Name == d.Name);
 
             if (device == null) return NotFound("Device doesn't exist");
             
-            var newUser = context.Employees.Include(x => x.Devices)
+            var newUser = Context.Employees.Include(x => x.Devices)
                 .FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
 
             if (newUser == null) return BadRequest("Employee doesn't exist");
 
             device.Employee.UsageList.First(x => x.Device.Name == d.Name).To = DateTime.Now;
 
-            context.SaveChanges();
+            Context.SaveChanges();
 
             DeviceUsage newUsage = new DeviceUsage
             {
@@ -168,7 +175,7 @@ namespace Zadatak.Controllers
             newUser.Devices.Add(device);
             newUser.UsageList.Add(newUsage);
             device.UsageList.Add(newUsage);
-            context.SaveChanges();
+            Context.SaveChanges();
 
             return Ok("Changed User");
         }
@@ -184,33 +191,7 @@ namespace Zadatak.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteDevice (long id)
         {
-            var targetDevice = context.Devices.Find(id);
-
-            if (targetDevice == null) return BadRequest("Device doesn't exist");
-
-            context.Devices.Remove(targetDevice);
-            try
-            {
-                context.SaveChanges();
-                return Ok("Deleted");
-            }
-
-            catch (DbUpdateException ex)
-            {
-
-                var sqlException = ex.GetBaseException() as SqlException;
-
-                if (sqlException != null)
-                {
-                    var exNum = sqlException.Number;
-
-                    if (exNum == 547)
-                    {
-                        return BadRequest("Cannot delete device from history.");
-                    }
-                }
-                return BadRequest("I don't know");
-            } 
+            return base.Delete(id);
         }
     }
 }
