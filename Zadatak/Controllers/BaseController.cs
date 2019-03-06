@@ -87,7 +87,7 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <param name="dto">The dto.</param>
         /// <returns></returns>
-        [HttpPost("Post")]
+        [HttpPost]
         protected virtual IActionResult Post(TDto dto)
         {
             DbSet.Add(Mapper.Map(dto, new TEntity()));

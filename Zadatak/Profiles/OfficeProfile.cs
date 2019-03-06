@@ -14,7 +14,10 @@ namespace Zadatak.Profiles
         {
             CreateMap<OfficeDTO, Office>()
                 .ForMember(dest => dest.Description, source => source.MapFrom(src => src.OfficeName))
-                .ForMember(dest => dest.Employees, source => source.Ignore());
+                .ForMember(dest => dest.Id, source => source.MapFrom(src => src.OfficeId));
+            CreateMap<Office, OfficeDTO>()
+                .ForMember(dest => dest.OfficeName, source => source.MapFrom(src => src.Description))
+                .ForMember(dest => dest.OfficeId, source => source.MapFrom(src => src.Id));
         }
     }
 }

@@ -115,7 +115,7 @@
             <param name="d">The d.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.AddDevice(Zadatak.Models.DeviceDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.PostDevice(Zadatak.Models.DeviceDTO)">
             <summary>
             Adds the device.
             </summary>
@@ -123,21 +123,6 @@
             <returns>
             Appropriate message if device was added, if it already exists or if employee wasn't found.
             </returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceName(System.Int64,Zadatak.Models.DeviceDTO)">
-            <summary>
-            Changes the name of the device.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="d">The d.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceUser(Zadatak.Models.DeviceDTO)">
-            <summary>
-            Changes the device user.
-            </summary>
-            <param name="d">The d.</param>
-            <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.DeleteDevice(System.Int64)">
             <summary>

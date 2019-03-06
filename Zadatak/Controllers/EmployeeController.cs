@@ -61,7 +61,7 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult GetEmployeeUseHistory(EmployeeDTO e)
         {
-            var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.FirstName == e.FName && x.LastName == e.LName);
+            var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == e.EmployeeId);
 
             if (employee == null) return BadRequest("Employee doesn't exist");
 
@@ -82,47 +82,12 @@ namespace Zadatak.Controllers
         public IActionResult GetEmployeeOffice(EmployeeDTO e)
         {
             var targetEmployee = Context.Employees.Include(x => x.Office)
-                .FirstOrDefault(x => x.FirstName == e.FName && x.LastName == e.LName);
+                .FirstOrDefault(x => x.Id == e.EmployeeId);
 
             if (targetEmployee == null) return NotFound("Employee doesn't exist");
 
             return Ok(Mapper.Map(targetEmployee.Office, new OfficeDTO()));
         }
-
-        // POST: api/Employee
-        ///// <summary>
-        /// Posts the employee.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        /// <returns></returns>
-        //[HttpPost]
-        //public IActionResult PostEmployee(EmployeeDTO e)
-        //{
-        //var office = Context.Offices.Include(x => x.Employees)
-        //    .FirstOrDefault(x => x.Description == e.Office.Description);
-
-        //if (office == null)
-        //{
-        //    office = new Office
-        //    {
-        //        Description = e.Office.Description
-        //    };
-        //    Context.SaveChanges();
-
-        //    var newEmployee = Mapper.Map<EmployeeDTO, Employee>(e);
-        //    office.Employees.Add(newEmployee);
-
-        //    Context.Offices.Add(office);
-        //    Context.SaveChanges();
-
-        //    return Ok("Added Office and Employee");
-        //}
-
-        //office.Employees.Add(Mapper.Map(e, new Employee()));
-        //Context.SaveChanges();
-
-        //return Ok("Added Employee");
-        //}
 
         // POST: api/Employee
         [HttpPost]

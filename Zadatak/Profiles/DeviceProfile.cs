@@ -12,14 +12,13 @@ namespace Zadatak.Profiles
     {
         public DeviceProfile()
         {
+            CreateMap<DeviceDTO, Device>()
+                .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Employee, source => source.Ignore())
+                .ForMember(dest => dest.EmployeeId, source => source.MapFrom(src => src.Employee.EmployeeId));
             CreateMap<Device, DeviceDTO>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
-                .ForMember(dest => dest.UserFn, source => source.MapFrom(src => src.Employee.FirstName))
-                .ForMember(dest => dest.UserLn, source => source.MapFrom(src => src.Employee.LastName));
-            CreateMap<Device, DeviceDTO>()
-                .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
-                .ForMember(dest => dest.UserFn, source => source.MapFrom(src => src.Employee.FirstName))
-                .ForMember(dest => dest.UserLn, source => source.MapFrom(src => src.Employee.LastName)).ReverseMap();
+                .ForMember(dest => dest.Employee, source => source.MapFrom(src => src.Employee));
         }
     }
 }

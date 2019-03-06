@@ -30,7 +30,7 @@ namespace Zadatak.Models
             var employee = obj as Employee;
             if (employee == null) return false;
 
-            if (FirstName != employee.FirstName && LastName != employee.LastName) return false; //&& Office.Description != employee.Office.Description) ;
+            if (Id != employee.Id) return false; //&& Office.Description != employee.Office.Description) ;
 
             return true;
         }

@@ -99,87 +99,67 @@ namespace Zadatak.Controllers
         /// Appropriate message if device was added, if it already exists or if employee wasn't found.
         /// </returns>
         [HttpPost]
-        public IActionResult AddDevice(DeviceDTO d)
+        public IActionResult PostDevice(DeviceDTO d)
         {
-            var device = Context.Devices.Include(x => x.UsageList).Include(x => x.Employee)
-                .FirstOrDefault(x => x.Name == d.Name);
+            var device = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Name == d.Name);
 
-            if (device != null) return BadRequest("Device Already Exists");
-            
-            var employee = Context.Employees.Include(x => x.Devices).FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
+            if (device != null) return BadRequest("Device already exists");
 
-            if (employee == null) return BadRequest("Employee doesn't exist");
-
-            var newDevice = Mapper.Map(d, new Device());
-            employee.Devices.Add(newDevice);
-
-            newDevice.UsageList.Add(new DeviceUsage
+            var newUsage = new DeviceUsage
             {
-                Employee = employee,
-                From = DateTime.Now,
-                To = null
-            });
+                From = DateTime.Now
+            };
+
+            base.Post(d);
+
+            var newDevice = Context.Devices.Include(x => x.Employee).First(x => x.Name == d.Name);
+
+            var employee = newDevice.Employee;
+
+            Context.DeviceUsages.Add(newUsage);
             Context.SaveChanges();
-           
-            return Ok("Added Device");
+            newUsage.Employee = employee;
+            newUsage.Device = newDevice;
+            Context.SaveChanges();
+            return Ok("Added");
         }
 
-        // PUT: api/Device/5
         /// <summary>
-        /// Changes the name of the device.
+        /// Changes the device name or user.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="d">The d.</param>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult ChangeDeviceName(long id, DeviceDTO d)
+        public IActionResult ChangeDeviceNameOrUser(long id, DeviceDTO d)
         {
-            var targetDevice = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
+            var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList).ThenInclude(x => x.Employee)
+                .FirstOrDefault(x => x.Id == id);
 
-            if (targetDevice == null) return NotFound("Device doesn't exist");
+            if (device == null) return BadRequest("Device doesn't exist");
 
-            Mapper.Map(d, targetDevice);
-            Context.SaveChanges();
+            var oldUser = device.Employee;
 
-            return Ok("Changed Device name");
-        }
+            var newUser = Context.Employees.Find(d.Employee.EmployeeId);
 
-        /// <summary>
-        /// Changes the device user.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns></returns>
-        [HttpPut]
-        public IActionResult ChangeDeviceUser(DeviceDTO d)
-        {
-            var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
-                .FirstOrDefault(x => x.Name == d.Name);
-
-            if (device == null) return NotFound("Device doesn't exist");
-            
-            var newUser = Context.Employees.Include(x => x.Devices)
-                .FirstOrDefault(x => x.FirstName == d.UserFn && x.LastName == d.UserLn);
-
-            if (newUser == null) return BadRequest("Employee doesn't exist");
-
-            device.Employee.UsageList.First(x => x.Device.Name == d.Name).To = DateTime.Now;
-
-            Context.SaveChanges();
-
-            DeviceUsage newUsage = new DeviceUsage
+            if (oldUser.Id != newUser.Id)
             {
-                From = DateTime.Now,
-                To = null
-            };
+                var oldUsage = device.UsageList.First(x => x.To == null);
+                oldUsage.To = DateTime.Now;
 
-            newUser.Devices.Add(device);
-            newUser.UsageList.Add(newUsage);
-            device.UsageList.Add(newUsage);
-            Context.SaveChanges();
+                var newUsage = new DeviceUsage
+                {
+                    From = DateTime.Now,
 
-            return Ok("Changed User");
+                };
+                Context.DeviceUsages.Add(newUsage);
+                Context.SaveChanges();
+                newUsage.Employee = newUser;
+                newUsage.Device = device;
+            }
+            return base.Put(id, d);
         }
-        
+
         // DELETE: api/ApiWithActions/5
         /// <summary>
         /// Deletes the device.

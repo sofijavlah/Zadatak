@@ -63,7 +63,7 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult GetOfficeEmployees(OfficeDTO o)
         {
-            var office = Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Description == o.OfficeName);
+            var office = Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Id == o.OfficeId);
             if (office == null) return BadRequest("Office doesn't exist");
 
             var employees = office.Employees.Select(x => Mapper.Map(x, new EmployeeDTO()));
