@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -157,6 +158,7 @@ namespace Zadatak.Controllers
                 newUsage.Employee = newUser;
                 newUsage.Device = device;
             }
+
             return base.Put(id, d);
         }
 
@@ -167,7 +169,7 @@ namespace Zadatak.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">Greska</exception>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult DeleteDevice (long id)
         {
             return base.Delete(id);

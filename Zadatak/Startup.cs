@@ -80,10 +80,14 @@ namespace Zadatak
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
 
             app.UseSwagger();
+
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Zadatak v1"); });
+
+            app.UseMvc();
+
+            
         }
     }
 }

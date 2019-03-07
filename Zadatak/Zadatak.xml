@@ -124,6 +124,14 @@
             Appropriate message if device was added, if it already exists or if employee wasn't found.
             </returns>
         </member>
+        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceNameOrUser(System.Int64,Zadatak.Models.DeviceDTO)">
+            <summary>
+            Changes the device name or user.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
         <member name="M:Zadatak.Controllers.DeviceController.DeleteDevice(System.Int64)">
             <summary>
             Deletes the device.
@@ -172,7 +180,6 @@
             <param name="e">The e.</param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Zadatak.Controllers.EmployeeController.PostEmployee(Zadatak.Models.EmployeeDTO)" -->
         <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">
             <summary>
             Changes the name of the employee.
