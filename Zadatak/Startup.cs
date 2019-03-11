@@ -13,7 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using Zadatak.Interfaces;
 using Zadatak.Models;
+using Zadatak.Repositories;
 
 namespace Zadatak
 {
@@ -48,16 +50,28 @@ namespace Zadatak
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+            //UOF
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
+            //SWAGGER
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info {Title = "Zadatak", Version = "v1"});
 
             });
 
+            //DB
             services.AddDbContext<WorkContext>(opts =>opts.UseSqlServer(Configuration ["ConnectionString:WorkDB"]));
 
+            //MAPPER
             services.AddAutoMapper();
-            
+
+            //REPOS
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //services.AddScoped<IDeviceRepository, DeviceRepository>();
 
         }
 

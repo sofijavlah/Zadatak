@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Zadatak.DTOs;
+using Zadatak.Interfaces;
 using Zadatak.Models;
+using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -21,38 +23,21 @@ namespace Zadatak.Controllers
     [ApiController]
     public class EmployeeController : BaseController<Employee, EmployeeDTO>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
-        /// </summary>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="context">The context.</param>
-        public EmployeeController(IMapper mapper, WorkContext context) : base (mapper, context)
+
+        private IMapper _mapper;
+
+        private IEmployeeRepository _repository;
+
+        private IUnitOfWork _unitOFWork;
+
+
+        public EmployeeController(IMapper mapper, EmployeeRepository repository, IUnitOfWork unitOFWork) : base(mapper, repository, unitOFWork)
         {
+            _mapper = mapper;
+            _repository = repository;
+            _unitOFWork = unitOFWork;
         }
 
-        // GET: api/Employee
-        /// <summary>
-        /// Gets the employees.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetEmployees()
-        {
-            return Ok(Context.Employees.Include(x => x.Office).Select(x => Mapper.Map(x, new EmployeeDTO())));
-        }
-
-        /// <summary>
-        /// Gets the employee.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetEmployee(long id)
-        {
-            return Ok(Context.Employees.Include(x => x.Office).Where(x => x.Id == id).Select(x => Mapper.Map(x, new EmployeeDTO())));
-        }
-
-        // GET: api/Employee/5
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
@@ -61,91 +46,14 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult GetEmployeeUseHistory(EmployeeDTO e)
         {
-            var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == e.EmployeeId);
+            var usages = _repository.GetEmployeeUseHistory(e.EmployeeId);
 
-            if (employee == null) return BadRequest("Employee doesn't exist");
+            if (!usages.Any()) return Ok("Employee hasn't used any devices");
 
-            if (!employee.UsageList.Any()) return Ok("Employee hasn't used any device yet");
-
-            var history = Mapper.Map<Employee, EmployeeDeviceUsageListDTO>(employee);
+            var history = usages.Select(x =>_mapper.Map(x, new UsageDeviceDTO()));
 
             return Ok(history);
         }
 
-
-        /// <summary>
-        /// Gets the employee office.
-        /// </summary>
-        /// <param name="e">The e.</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult GetEmployeeOffice(EmployeeDTO e)
-        {
-            var targetEmployee = Context.Employees.Include(x => x.Office)
-                .FirstOrDefault(x => x.Id == e.EmployeeId);
-
-            if (targetEmployee == null) return NotFound("Employee doesn't exist");
-
-            return Ok(Mapper.Map(targetEmployee.Office, new OfficeDTO()));
-        }
-
-        // POST: api/Employee
-        [HttpPost]
-        public IActionResult PostEmployee(EmployeeDTO e)
-        {
-            return base.Post(e);
-        }
-
-        // PUT: api/Employee/5
-        /// <summary>
-        /// Changes the name of the employee.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="e">The e.</param>
-        /// <returns></returns>
-        [HttpPut]
-        public IActionResult ChangeEmployeeName(long id, EmployeeDTO e)
-        {
-            return Ok(base.Put(id, e));
-        }
-
-        // PUT: api/Employee/5
-        /// <summary>
-        /// Changes the employee office.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="o">The o.</param>
-        /// <returns></returns>
-        [HttpPut]
-        public IActionResult ChangeEmployeeOffice(long id, OfficeDTO o)
-        {
-            var targetEmployee = Context.Employees.Include(x => x.Office).FirstOrDefault(x => x.Id == id);
-
-            if (targetEmployee == null) return NotFound("Employee doesn't exist");
-
-            var newOffice = Context.Offices.Include(x => x.Employees)
-                .FirstOrDefault(x => x.Description == o.OfficeName);
-
-            if (newOffice == null) return BadRequest("Office doesn't exist");
-
-            targetEmployee.Office = newOffice;
-
-            Context.SaveChanges();
-
-            return Ok("Changed Employee Office");
-        }
-
-
-        // DELETE: api/ApiWithActions/5
-        /// <summary>
-        /// Deletes the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        [HttpDelete]
-        public IActionResult DeleteEmployee(long id)
-        {
-            return base.Delete(id);
-        }
     }
 }

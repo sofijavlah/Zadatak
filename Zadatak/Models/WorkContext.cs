@@ -21,11 +21,11 @@ namespace Zadatak.Models
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="ho">The ho.</param>
-        public WorkContext(DbContextOptions<WorkContext> options, IHostingEnvironment ho)
-            : base(options)
-        {
-            this.ho = ho;
-        }
+        //public WorkContext(DbContextOptions<WorkContext> options, IHostingEnvironment ho)
+        //    : base(options)
+        //{
+        //    this.ho = ho;
+        //}
 
         public DbSet<Office> Offices { get; set; }
         public DbSet<Employee> Employees { get; set; }

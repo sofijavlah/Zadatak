@@ -7,7 +7,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Interfaces;
 using Zadatak.Models;
+using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -27,34 +29,24 @@ namespace Zadatak.Controllers
         /// <value>
         /// The mapper.
         /// </value>
-        protected IMapper Mapper { get; set; }
+        private IMapper _mapper;
 
-        /// <summary>
-        /// Gets or sets the context.
-        /// </summary>
-        /// <value>
-        /// The context.
-        /// </value>
-        protected WorkContext Context { get; set; }
+        private IRepository<TEntity> _repository;
 
-        /// <summary>
-        /// Gets or sets the database set.
-        /// </summary>
-        /// <value>
-        /// The database set.
-        /// </value>
-        protected DbSet<TEntity> DbSet { get; set; }
+        private IUnitOfWork _unitOFWork;
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseController{TEntity, TDto}"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="context">The context.</param>
-        public BaseController(IMapper mapper, WorkContext context)
+        public BaseController(IMapper mapper, Repository<TEntity> repository, IUnitOfWork unitOFWork)
         {
-            Context = context;
-            DbSet = context.Set<TEntity>();
-            Mapper = mapper;
+            _mapper = mapper;
+            _repository = repository;
+            _unitOFWork = unitOFWork;
         }
 
         // GET: api/Base
@@ -63,9 +55,10 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        protected virtual IActionResult GetAll()
+        public virtual IActionResult GetAll()
         {
-            return Ok(DbSet.Select(x => Mapper.Map(x, new TDto())));
+            //var entities = _mapper.Map(_repository.GetAll().Select(x => new TDto()));
+            return Ok(_mapper.Map(_repository.GetAll(), new List<TDto>()));
         }
 
         // GET: api/Base/5
@@ -75,10 +68,15 @@ namespace Zadatak.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpGet]
-        protected virtual IActionResult Get(long id)
+        public virtual IActionResult Get(long id)
         {
-            if (DbSet.Find(id) == null) return NotFound("Doesn't exist");
-            return Ok(Mapper.Map(DbSet.Find(id), new TDto()));
+            var entity = _repository.Get(id);
+
+            if (entity == null) return NotFound("Doesn't exist");
+
+            var dto = _mapper.Map(entity, new TDto());
+
+            return Ok(dto);
         }
 
         // POST: api/Base
@@ -88,10 +86,24 @@ namespace Zadatak.Controllers
         /// <param name="dto">The dto.</param>
         /// <returns></returns>
         [HttpPost]
-        protected virtual IActionResult Post(TDto dto)
+        public virtual IActionResult Post(TDto dto)
         {
-            DbSet.Add(Mapper.Map(dto, new TEntity()));
-            Context.SaveChanges();
+            _unitOFWork.Start();
+
+            try
+            {
+                var entity = _mapper.Map(dto, new TEntity());
+
+                _repository.Add(entity);
+            }
+
+            catch (Exception e)
+            {
+                throw new Exception("Cannot add");
+            }
+
+            _unitOFWork.Commit();
+
             return Ok("Added");
         }
 
@@ -103,11 +115,14 @@ namespace Zadatak.Controllers
         /// <param name="dto">The dto.</param>
         /// <returns></returns>
         [HttpPut]
-        protected virtual IActionResult Put(long id, TDto dto)
+        public virtual IActionResult Put(long id, TDto dto)
         {
-            if (DbSet.Find(id) == null) return BadRequest("Doesn't exist");
-            DbSet.Update(Mapper.Map(dto, DbSet.Find(id)));
-            Context.SaveChanges();
+            var entity = _repository.Get(id);
+
+            if (entity == null) return BadRequest("Doesn't exist");
+
+            Mapper.Map(dto, entity);
+
             return Ok("Changed");
         }
 
@@ -118,13 +133,14 @@ namespace Zadatak.Controllers
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpDelete]
-        protected virtual IActionResult Delete(long id)
+        public virtual IActionResult Delete(long id)
         {
-            if (DbSet.Find(id) == null) return BadRequest("Doesn't exist");
-            DbSet.Remove(DbSet.Find(id));
+            var entity = _repository.Get(id);
+
+            if (entity == null) return BadRequest("Doesn't exist");
             try
             {
-                Context.SaveChanges();
+                _repository.Remove(entity);
             }
             catch (DbUpdateException ex)
             {

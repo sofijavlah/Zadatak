@@ -7,6 +7,8 @@ namespace Zadatak.Models
 {
     public class DeviceDTO
     {
+        public long Id { get; set; }
+
         public string Name { get; set; }
 
         public EmployeeDTO Employee { get; set; }

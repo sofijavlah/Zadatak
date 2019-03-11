@@ -5,8 +5,15 @@ using System.Threading.Tasks;
 
 namespace Zadatak.Interfaces
 {
-    public interface IDomain
+    public interface IUnitOfWork : IDisposable
     {
 
+        void Save();
+
+        void Start();
+
+        void Commit();
+
+        void Dispose();
     }
 }
