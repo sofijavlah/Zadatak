@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Zadatak.DTOs;
-using Zadatak.Models;
-using Zadatak.Repositories;
+﻿using Zadatak.Models;
 
 namespace Zadatak.Interfaces
 {
+    /// <summary>
+    /// Interface for Office Repository
+    /// </summary>
+    /// <seealso>
+    ///     <cref>Repositories.IRepository{Models.Office}</cref>
+    /// </seealso>
     public interface IOfficeRepository : IRepository<Office>
     {
-        Office GetOfficeEmployees(string description);
-
-        //bool DeleteJustEmployees(string description);
     }
 }

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Zadatak.DTOs;
+using Zadatak.DTOs.Employee;
+using Zadatak.DTOs.Usage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 using Zadatak.Repositories;
@@ -21,21 +14,39 @@ namespace Zadatak.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [ApiController]
-    public class EmployeeController : BaseController<Employee, EmployeeDTO>
+    public class EmployeeController : BaseController<Employee, EmployeeDto>
     {
 
-        private IMapper _mapper;
+        /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
 
-        private IEmployeeRepository _repository;
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEmployeeRepository _repository;
 
-        private IUnitOfWork _unitOFWork;
+        private readonly IDeviceRepository _deviceRepository;
+
+        /// <summary>
+        /// The unit of work
+        /// </summary>
+        private readonly IUnitOfWork _unitOfWork;
 
 
-        public EmployeeController(IMapper mapper, EmployeeRepository repository, IUnitOfWork unitOFWork) : base(mapper, repository, unitOFWork)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
+        /// </summary>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="repository">The repository.</param>
+        /// <param name="unitOfWork">The unit of work.</param>
+        public EmployeeController(IMapper mapper, IEmployeeRepository repository, IDeviceRepository deviceRepository, IUnitOfWork unitOfWork) : base(mapper, repository, unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOFWork = unitOFWork;
+            _deviceRepository = deviceRepository;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -44,13 +55,11 @@ namespace Zadatak.Controllers
         /// <param name="e">The e.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetEmployeeUseHistory(EmployeeDTO e)
+        public IActionResult GetEmployeeUseHistory(EmployeeDto e)
         {
-            var usages = _repository.GetEmployeeUseHistory(e.EmployeeId);
+            if (!_repository.GetEmployeeUseHistory(e.EmployeeId).Any()) return Ok("Employee hasn't used any devices");
 
-            if (!usages.Any()) return Ok("Employee hasn't used any devices");
-
-            var history = usages.Select(x =>_mapper.Map(x, new UsageDeviceDTO()));
+            var history = _mapper.Map<UsageDeviceDto>(_repository.GetEmployeeUseHistory(e.EmployeeId));
 
             return Ok(history);
         }

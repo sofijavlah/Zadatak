@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.Interfaces;
-using Zadatak.Models;
 using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
@@ -29,24 +25,23 @@ namespace Zadatak.Controllers
         /// <value>
         /// The mapper.
         /// </value>
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        private IRepository<TEntity> _repository;
+        private readonly IRepository<TEntity> _repository;
 
-        private IUnitOfWork _unitOFWork;
-
-
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseController{TEntity, TDto}"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="context">The context.</param>
-        public BaseController(IMapper mapper, Repository<TEntity> repository, IUnitOfWork unitOFWork)
+        /// <param name="repository">The repository.</param>
+        /// <param name="unitOfWork">The unit of work.</param>
+        public BaseController(IMapper mapper, IRepository<TEntity> repository, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOFWork = unitOFWork;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: api/Base
@@ -57,8 +52,8 @@ namespace Zadatak.Controllers
         [HttpGet]
         public virtual IActionResult GetAll()
         {
-            //var entities = _mapper.Map(_repository.GetAll().Select(x => new TDto()));
-            return Ok(_mapper.Map(_repository.GetAll(), new List<TDto>()));
+            var entities = _repository.GetAll().Select(x => _mapper.Map<TDto>(x));
+            return Ok(entities);
         }
 
         // GET: api/Base/5
@@ -66,7 +61,9 @@ namespace Zadatak.Controllers
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// 
+        /// </returns>
         [HttpGet]
         public virtual IActionResult Get(long id)
         {
@@ -88,21 +85,22 @@ namespace Zadatak.Controllers
         [HttpPost]
         public virtual IActionResult Post(TDto dto)
         {
-            _unitOFWork.Start();
+            _unitOfWork.Start();
 
             try
             {
-                var entity = _mapper.Map(dto, new TEntity());
+                var entity = _mapper.Map<TEntity>(dto);
 
                 _repository.Add(entity);
             }
 
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Cannot add");
             }
 
-            _unitOFWork.Commit();
+            _unitOfWork.Save();
+            _unitOfWork.Commit();
 
             return Ok("Added");
         }
@@ -117,11 +115,16 @@ namespace Zadatak.Controllers
         [HttpPut]
         public virtual IActionResult Put(long id, TDto dto)
         {
+            _unitOfWork.Start();
+
             var entity = _repository.Get(id);
 
             if (entity == null) return BadRequest("Doesn't exist");
 
             Mapper.Map(dto, entity);
+
+            _unitOfWork.Save();
+            _unitOfWork.Commit();
 
             return Ok("Changed");
         }

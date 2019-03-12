@@ -12,7 +12,7 @@
             <typeparam name="TDto">The type of the dto.</typeparam>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="P:Zadatak.Controllers.BaseController`2.Mapper">
+        <member name="F:Zadatak.Controllers.BaseController`2._mapper">
             <summary>
             Gets or sets the mapper.
             </summary>
@@ -20,28 +20,13 @@
             The mapper.
             </value>
         </member>
-        <member name="P:Zadatak.Controllers.BaseController`2.Context">
-            <summary>
-            Gets or sets the context.
-            </summary>
-            <value>
-            The context.
-            </value>
-        </member>
-        <member name="P:Zadatak.Controllers.BaseController`2.DbSet">
-            <summary>
-            Gets or sets the database set.
-            </summary>
-            <value>
-            The database set.
-            </value>
-        </member>
-        <member name="M:Zadatak.Controllers.BaseController`2.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+        <member name="M:Zadatak.Controllers.BaseController`2.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IRepository{`0},Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.BaseController`2"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
-            <param name="context">The context.</param>
+            <param name="repository">The repository.</param>
+            <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.BaseController`2.GetAll">
             <summary>
@@ -54,7 +39,9 @@
             Gets the specified identifier.
             </summary>
             <param name="id">The identifier.</param>
-            <returns></returns>
+            <returns>
+            
+            </returns>
         </member>
         <member name="M:Zadatak.Controllers.BaseController`2.Post(`1)">
             <summary>
@@ -84,61 +71,41 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+        <member name="F:Zadatak.Controllers.DeviceController._mapper">
+            <summary>
+            The mapper
+            </summary>
+        </member>
+        <member name="F:Zadatak.Controllers.DeviceController._repository">
+            <summary>
+            The repository
+            </summary>
+        </member>
+        <member name="F:Zadatak.Controllers.DeviceController._unitOfWork">
+            <summary>
+            The unit of work
+            </summary>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IDeviceRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
-            <param name="context">The context.</param>
+            <param name="repository">The repository.</param>
+            <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDevices">
-            <summary>Gets the device list.</summary>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDevice(System.Int64)">
-            <summary>
-            Gets the device.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(Zadatak.Models.DeviceDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(Zadatak.DTOs.Device.DeviceDto)">
             <summary>
             Gets the device use history.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(Zadatak.Models.DeviceDTO)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
             <summary>
             Gets the device current information.
             </summary>
             <param name="d">The d.</param>
             <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.PostDevice(Zadatak.Models.DeviceDTO)">
-            <summary>
-            Adds the device.
-            </summary>
-            <param name="d">The d.</param>
-            <returns>
-            Appropriate message if device was added, if it already exists or if employee wasn't found.
-            </returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.ChangeDeviceNameOrUser(System.Int64,Zadatak.Models.DeviceDTO)">
-            <summary>
-            Changes the device name or user.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="d">The d.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.DeviceController.DeleteDevice(System.Int64)">
-            <summary>
-            Deletes the device.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException">Greska</exception>
         </member>
         <member name="T:Zadatak.Controllers.EmployeeController">
             <summary>
@@ -146,61 +113,34 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+        <member name="F:Zadatak.Controllers.EmployeeController._mapper">
+            <summary>
+            The mapper
+            </summary>
+        </member>
+        <member name="F:Zadatak.Controllers.EmployeeController._repository">
+            <summary>
+            The repository
+            </summary>
+        </member>
+        <member name="F:Zadatak.Controllers.EmployeeController._unitOfWork">
+            <summary>
+            The unit of work
+            </summary>
+        </member>
+        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
-            <param name="context">The context.</param>
+            <param name="repository">The repository.</param>
+            <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployees">
-            <summary>
-            Gets the employees.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployee(System.Int64)">
-            <summary>
-            Gets the employee.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(Zadatak.Models.EmployeeDTO)">
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(Zadatak.DTOs.Employee.EmployeeDto)">
             <summary>
             Gets the employee use history.
             </summary>
             <param name="e">The e.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeOffice(Zadatak.Models.EmployeeDTO)">
-            <summary>
-            Gets the employee office.
-            </summary>
-            <param name="e">The e.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeName(System.Int64,Zadatak.Models.EmployeeDTO)">
-            <summary>
-            Changes the name of the employee.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="e">The e.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.ChangeEmployeeOffice(System.Int64,Zadatak.Models.OfficeDTO)">
-            <summary>
-            Changes the employee office.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.DeleteEmployee(System.Int64)">
-            <summary>
-            Deletes the specified identifier.
-            </summary>
-            <param name="id">The identifier.</param>
             <returns></returns>
         </member>
         <member name="T:Zadatak.Controllers.OfficeController">
@@ -209,83 +149,555 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Models.WorkContext)">
+        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IOfficeRepository,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.OfficeController"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
-            <param name="context">The context.</param>
+            <param name="repository">The repository.</param>
+            <param name="employeeRepository">The employee repository.</param>
+            <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.GetOffices">
-            <summary>
-            Gets the offices.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.GetOffice(System.Int64)">
-            <summary>
-            Gets the office.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.GetOfficeEmployees(Zadatak.Models.OfficeDTO)">
+        <member name="M:Zadatak.Controllers.OfficeController.GetOfficeEmployees(System.String)">
             <summary>
             Gets the office employees.
             </summary>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.PostOffice(Zadatak.Models.OfficeDTO)">
-            <summary>
-            Adds the office.
-            </summary>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.ChangeOfficeName(System.Int64,Zadatak.Models.OfficeDTO)">
-            <summary>
-            Changes the name of the office.
-            </summary>
-            <param name="id">The identifier.</param>
-            <param name="o">The o.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Controllers.OfficeController.DeleteOffice(System.Int64)">
-            <summary>
-            Deletes the office and employees.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
+            <param name="description">The description.</param>
+            <returns>
+            400 error code if office doesn't exist, 200 with message: "Office doesn't have any..." if office empty or List of employees in office.
+            </returns>
         </member>
         <member name="M:Zadatak.Controllers.OfficeController.DeleteJustEmployees(System.Int64)">
             <summary>
-            Deletes the just employees.
+            Deletes employees from office with given id.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>
+            400 error code if office with given id doesn't exist, 200(Ok) code with appropriate message:
+            "No employees..." if office is empty or "Employees removed" if delete was successful.
+            </returns>
+        </member>
+        <member name="T:Zadatak.DTOs.Device.DeviceDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Device.DeviceDto.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Device.DeviceDto.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Device.DeviceDto.Employee">
+            <summary>
+            Gets or sets the employee.
+            </summary>
+            <value>
+            The employee.
+            </value>
+        </member>
+        <member name="T:Zadatak.DTOs.Employee.EmployeeDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Employee.EmployeeDto.EmployeeId">
+            <summary>
+            Gets or sets the employee identifier.
+            </summary>
+            <value>
+            The employee identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Employee.EmployeeDto.FName">
+            <summary>
+            Gets or sets the name of the f.
+            </summary>
+            <value>
+            The name of the f.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Employee.EmployeeDto.LName">
+            <summary>
+            Gets or sets the name of the l.
+            </summary>
+            <value>
+            The name of the l.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Employee.EmployeeDto.Office">
+            <summary>
+            Gets or sets the office.
+            </summary>
+            <value>
+            The office.
+            </value>
+        </member>
+        <member name="T:Zadatak.DTOs.Office.OfficeDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Office.OfficeDto.OfficeName">
+            <summary>
+            Gets or sets the name of the office.
+            </summary>
+            <value>
+            The name of the office.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Office.OfficeDto.OfficeId">
+            <summary>
+            Gets or sets the office identifier.
+            </summary>
+            <value>
+            The office identifier.
+            </value>
+        </member>
+        <member name="T:Zadatak.DTOs.Usage.UsageDeviceDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageDeviceDto.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageDeviceDto.From">
+            <summary>
+            Gets or sets from.
+            </summary>
+            <value>
+            From.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageDeviceDto.To">
+            <summary>
+            Gets or sets to.
+            </summary>
+            <value>
+            To.
+            </value>
+        </member>
+        <member name="T:Zadatak.DTOs.Usage.UsageDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageDto.From">
+            <summary>
+            Gets or sets from.
+            </summary>
+            <value>
+            From.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageDto.To">
+            <summary>
+            Gets or sets to.
+            </summary>
+            <value>
+            To.
+            </value>
+        </member>
+        <member name="T:Zadatak.DTOs.Usage.UsageUserDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageUserDto.UserFn">
+            <summary>
+            Gets or sets the user function.
+            </summary>
+            <value>
+            The user function.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageUserDto.UserLn">
+            <summary>
+            Gets or sets the user ln.
+            </summary>
+            <value>
+            The user ln.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageUserDto.From">
+            <summary>
+            Gets or sets from.
+            </summary>
+            <value>
+            From.
+            </value>
+        </member>
+        <member name="P:Zadatak.DTOs.Usage.UsageUserDto.To">
+            <summary>
+            Gets or sets to.
+            </summary>
+            <value>
+            To.
+            </value>
+        </member>
+        <member name="T:Zadatak.Interfaces.IDeviceRepository">
+            <summary>
+            Interface for Device Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.IRepository{Models.Device}</cref>
+            </seealso>
+        </member>
+        <member name="M:Zadatak.Interfaces.IDeviceRepository.GetDeviceUseHistory(System.Int64)">
+            <summary>
+            Gets the device use history.
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
+        </member>
+        <member name="M:Zadatak.Interfaces.IDeviceRepository.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
+            <summary>
+            Gets the device current information.
+            </summary>
+            <param name="d">The d.</param>
+        </member>
+        <member name="T:Zadatak.Interfaces.IEmployeeRepository">
+            <summary>
+            Interface for Employee Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.IRepository{Models.Employee}</cref>
+            </seealso>
+        </member>
+        <member name="M:Zadatak.Interfaces.IEmployeeRepository.GetEmployeeUseHistory(System.Int64)">
+            <summary>
+            Gets the employee use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Interfaces.IEmployeeRepository.GetOffice(System.String)">
+            <summary>
+            Gets the office.
+            </summary>
+            <param name="description">The description.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Zadatak.Interfaces.IOfficeRepository">
+            <summary>
+            Interface for Office Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.IRepository{Models.Office}</cref>
+            </seealso>
+        </member>
+        <member name="T:Zadatak.Interfaces.IRepository`1">
+            <summary>
+            Generic repository
+            </summary>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+        </member>
+        <member name="M:Zadatak.Interfaces.IRepository`1.GetAll">
+            <summary>
+            Gets all.
+            </summary>
+            <returns>
+            List of all entities.
+            </returns>
+        </member>
+        <member name="M:Zadatak.Interfaces.IRepository`1.Get(System.Int64)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>
+            Entity with given Id.
+            </returns>
+        </member>
+        <member name="M:Zadatak.Interfaces.IRepository`1.Add(`0)">
+            <summary>
+            Adds the specified example.
+            </summary>
+            <param name="example">The example.</param>
+        </member>
+        <member name="M:Zadatak.Interfaces.IRepository`1.Update(`0)">
+            <summary>
+            Updates the specified example.
+            </summary>
+            <param name="example">The example.</param>
+        </member>
+        <member name="M:Zadatak.Interfaces.IRepository`1.Remove(`0)">
+            <summary>
+            Removes the specified entity.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
+        <member name="T:Zadatak.Interfaces.IUnitOfWork">
+            <summary>
+            Interface for Unit of Work
+            </summary>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:Zadatak.Interfaces.IUnitOfWork.Save">
+            <summary>
+            Saves this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.Interfaces.IUnitOfWork.Start">
+            <summary>
+            Starts this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.Interfaces.IUnitOfWork.Commit">
+            <summary>
+            Commits this instance.
+            </summary>
+        </member>
+        <member name="T:Zadatak.Migrations.Prva">
+            <summary>
+            First migration
+            </summary>
+            <seealso cref="T:Microsoft.EntityFrameworkCore.Migrations.Migration" />
+        </member>
+        <member name="M:Zadatak.Migrations.Prva.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <summary>
+            <para>
+            Builds the operations that will migrate the database 'up'.
+            </para>
+            <para>
+            That is, builds the operations that will take the database from the state left in by the
+            previous migration so that it is up-to-date with regard to this migration.
+            </para>
+            <para>
+            This method must be overridden in each class the inherits from <see cref="T:Microsoft.EntityFrameworkCore.Migrations.Migration" />.
+            </para>
+            </summary>
+            <param name="migrationBuilder">The <see cref="T:Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder" /> that will build the operations.</param>
+        </member>
+        <member name="M:Zadatak.Migrations.Prva.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <summary>
+            <para>
+            Builds the operations that will migrate the database 'down'.
+            </para>
+            <para>
+            That is, builds the operations that will take the database from the state left in by
+            this migration so that it returns to the state that it was in before this migration was applied.
+            </para>
+            <para>
+            This method must be overridden in each class the inherits from <see cref="T:Microsoft.EntityFrameworkCore.Migrations.Migration" /> if
+            both 'up' and 'down' migrations are to be supported. If it is not overridden, then calling it
+            will throw and it will not be possible to migrate in the 'down' direction.
+            </para>
+            </summary>
+            <param name="migrationBuilder">The <see cref="T:Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder" /> that will build the operations.</param>
+        </member>
+        <member name="M:Zadatak.Migrations.Prva.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Implemented to builds the <see cref="P:Microsoft.EntityFrameworkCore.Migrations.Migration.TargetModel" />.
+            </summary>
+            <param name="modelBuilder">The <see cref="T:Microsoft.EntityFrameworkCore.ModelBuilder" /> to use to build the model.</param>
         </member>
         <member name="T:Zadatak.Models.Device">
             <summary>
             Device model class
             </summary>
         </member>
+        <member name="P:Zadatak.Models.Device.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Device.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Device.EmployeeId">
+            <summary>
+            Gets or sets the employee identifier.
+            </summary>
+            <value>
+            The employee identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Device.Employee">
+            <summary>
+            Gets or sets the employee.
+            </summary>
+            <value>
+            The employee.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Device.UsageList">
+            <summary>
+            Gets or sets the usage list.
+            </summary>
+            <value>
+            The usage list.
+            </value>
+        </member>
         <member name="T:Zadatak.Models.DeviceUsage">
             <summary>
             
             </summary>
         </member>
-        <member name="M:Zadatak.Models.ExceptionOnDelete.#ctor(System.String)">
+        <member name="P:Zadatak.Models.DeviceUsage.Id">
             <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.Models.ExceptionOnDelete"/> class.
+            Gets or sets the identifier.
             </summary>
-            <param name="message">The message that describes the error.</param>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.DeviceUsage.From">
+            <summary>
+            Gets or sets from.
+            </summary>
+            <value>
+            From.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.DeviceUsage.To">
+            <summary>
+            Gets or sets to.
+            </summary>
+            <value>
+            To.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.DeviceUsage.Employee">
+            <summary>
+            Gets or sets the employee.
+            </summary>
+            <value>
+            The employee.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.DeviceUsage.Device">
+            <summary>
+            Gets or sets the device.
+            </summary>
+            <value>
+            The device.
+            </value>
+        </member>
+        <member name="T:Zadatak.Models.Employee">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.Models.Employee.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.OfficeId">
+            <summary>
+            Gets or sets the office identifier.
+            </summary>
+            <value>
+            The office identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.Office">
+            <summary>
+            Gets or sets the office.
+            </summary>
+            <value>
+            The office.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.Devices">
+            <summary>
+            Gets or sets the devices.
+            </summary>
+            <value>
+            The devices.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Employee.UsageList">
+            <summary>
+            Gets or sets the usage list.
+            </summary>
+            <value>
+            The usage list.
+            </value>
+        </member>
+        <member name="T:Zadatak.Models.Office">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Zadatak.Models.Office.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Office.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.Office.Employees">
+            <summary>
+            Gets or sets the employees.
+            </summary>
+            <value>
+            The employees.
+            </value>
         </member>
         <member name="T:Zadatak.Models.WorkContext">
             <summary>
             
             </summary>
             <seealso cref="T:Microsoft.EntityFrameworkCore.DbContext" />
+        </member>
+        <member name="F:Zadatak.Models.WorkContext.ho">
+            <summary>
+            The ho
+            </summary>
         </member>
         <member name="M:Zadatak.Models.WorkContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Zadatak.Models.WorkContext},Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
             <summary>
@@ -294,17 +706,103 @@
             <param name="options">The options.</param>
             <param name="ho">The ho.</param>
         </member>
-        <member name="T:Zadatak.Migrations.Prva">
+        <member name="P:Zadatak.Models.WorkContext.Offices">
+            <summary>
+            Gets or sets the offices.
+            </summary>
+            <value>
+            The offices.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.WorkContext.Employees">
+            <summary>
+            Gets or sets the employees.
+            </summary>
+            <value>
+            The employees.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.WorkContext.Devices">
+            <summary>
+            Gets or sets the devices.
+            </summary>
+            <value>
+            The devices.
+            </value>
+        </member>
+        <member name="P:Zadatak.Models.WorkContext.DeviceUsages">
+            <summary>
+            Gets or sets the device usages.
+            </summary>
+            <value>
+            The device usages.
+            </value>
+        </member>
+        <member name="T:Zadatak.Profiles.DeviceProfile">
             <summary>
             
             </summary>
-            <seealso cref="T:Microsoft.EntityFrameworkCore.Migrations.Migration" />
+            <seealso cref="T:AutoMapper.Profile" />
         </member>
-        <member name="M:Zadatak.Migrations.Prva.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:Zadatak.Profiles.DeviceProfile.#ctor">
             <summary>
-            Implemented to builds the <see cref="P:Microsoft.EntityFrameworkCore.Migrations.Migration.TargetModel" />.
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.DeviceProfile"/> class.
             </summary>
-            <param name="modelBuilder">The <see cref="T:Microsoft.EntityFrameworkCore.ModelBuilder" /> to use to build the model.</param>
+        </member>
+        <member name="T:Zadatak.Profiles.EmployeeProfile">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:AutoMapper.Profile" />
+        </member>
+        <member name="M:Zadatak.Profiles.EmployeeProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.EmployeeProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:Zadatak.Profiles.OfficeProfile">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:AutoMapper.Profile" />
+        </member>
+        <member name="M:Zadatak.Profiles.OfficeProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.OfficeProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:Zadatak.Profiles.UsageDeviceProfile">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:AutoMapper.Profile" />
+        </member>
+        <member name="M:Zadatak.Profiles.UsageDeviceProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.UsageDeviceProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:Zadatak.Profiles.UsageProfile">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:AutoMapper.Profile" />
+        </member>
+        <member name="M:Zadatak.Profiles.UsageProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.UsageProfile"/> class.
+            </summary>
+        </member>
+        <member name="T:Zadatak.Profiles.UsageUserProfile">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:AutoMapper.Profile" />
+        </member>
+        <member name="M:Zadatak.Profiles.UsageUserProfile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Profiles.UsageUserProfile"/> class.
+            </summary>
         </member>
         <member name="T:Zadatak.Program">
             <summary>
@@ -323,6 +821,139 @@
             </summary>
             <param name="args">The arguments.</param>
             <returns></returns>
+        </member>
+        <member name="T:Zadatak.Repositories.DeviceRepository">
+            <summary>
+            Device Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.Repository{Models.Device}</cref>
+            </seealso>
+            <seealso cref="T:Zadatak.Interfaces.IDeviceRepository" />
+        </member>
+        <member name="M:Zadatak.Repositories.DeviceRepository.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Repositories.DeviceRepository"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceUseHistory(System.Int64)">
+            <summary>
+            Gets the device use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Device doesn't exist</exception>
+        </member>
+        <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
+            <summary>
+            Gets the device current information.
+            </summary>
+            <param name="d">The d.</param>
+        </member>
+        <member name="T:Zadatak.Repositories.EmployeeRepository">
+            <summary>
+            Employee Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.Repository{Models.Employee}</cref>
+            </seealso>
+            <seealso cref="T:Zadatak.Interfaces.IEmployeeRepository" />
+        </member>
+        <member name="M:Zadatak.Repositories.EmployeeRepository.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Repositories.EmployeeRepository"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.EmployeeRepository.GetEmployeeUseHistory(System.Int64)">
+            <summary>
+            Gets the employee use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Employee doesn't exist</exception>
+        </member>
+        <member name="M:Zadatak.Repositories.EmployeeRepository.GetOffice(System.String)">
+            <summary>
+            Gets the office.
+            </summary>
+            <param name="description">The description.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Zadatak.Repositories.OfficeRepository">
+            <summary>
+            Office Repository
+            </summary>
+            <seealso>
+                <cref>Repositories.Repository{Models.Office}</cref>
+            </seealso>
+            <seealso cref="T:Zadatak.Interfaces.IOfficeRepository" />
+        </member>
+        <member name="M:Zadatak.Repositories.OfficeRepository.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Repositories.OfficeRepository"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="T:Zadatak.Repositories.Repository`1">
+            <summary>
+            Generic Repository
+            </summary>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <seealso cref="T:Zadatak.Interfaces.IRepository`1" />
+        </member>
+        <member name="P:Zadatak.Repositories.Repository`1.Context">
+            <summary>
+            Gets the context.
+            </summary>
+            <value>
+            The context.
+            </value>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Repositories.Repository`1"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.GetAll">
+            <summary>
+            Gets all.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.Get(System.Int64)">
+            <summary>
+            Gets the specified identifier.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.Add(`0)">
+            <summary>
+            Adds the specified entity.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.Find(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Finds the specified predicate.
+            </summary>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.Update(`0)">
+            <summary>
+            Updates the specified entity.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.Repository`1.Remove(`0)">
+            <summary>
+            Removes the specified entity.
+            </summary>
+            <param name="entity">The entity.</param>
         </member>
         <member name="T:Zadatak.Startup">
             <summary>
@@ -355,6 +986,38 @@
             </summary>
             <param name="app">The application.</param>
             <param name="env">The env.</param>
+        </member>
+        <member name="T:Zadatak.UnitOfWork.UnitOfWork">
+            <summary>
+            Unit of Work
+            </summary>
+            <seealso cref="T:Zadatak.Interfaces.IUnitOfWork" />
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.UnitOfWork.UnitOfWork"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Start">
+            <summary>
+            Starts this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Save">
+            <summary>
+            Saves this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Commit">
+            <summary>
+            Commits this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
         </member>
     </members>
 </doc>

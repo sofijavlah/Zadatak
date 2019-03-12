@@ -1,45 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
-using Zadatak.Repositories;
 
 namespace Zadatak.UnitOfWork
 {
+    /// <summary>
+    /// Unit of Work
+    /// </summary>
+    /// <seealso cref="Zadatak.Interfaces.IUnitOfWork" />
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly WorkContext Context;
+        private readonly WorkContext _context;
 
-        private IDbContextTransaction transaction;
+        private IDbContextTransaction _transaction;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public UnitOfWork(WorkContext context)
         {
-            Context = context;
+            _context = context;
         }
 
+        /// <summary>
+        /// Starts this instance.
+        /// </summary>
         public void Start()
         {
-            transaction = Context.Database.BeginTransaction();
+            _transaction = _context.Database.BeginTransaction();
         }
 
+        /// <summary>
+        /// Saves this instance.
+        /// </summary>
         public void Save()
         {
-            Context.SaveChanges();
+            _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Commits this instance.
+        /// </summary>
         public void Commit()
         {
-            transaction.Commit();
+            _transaction.Commit();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
-            transaction?.Dispose();
+            _context?.Dispose();
+            _transaction?.Dispose();
         }
-
-
     }
 }

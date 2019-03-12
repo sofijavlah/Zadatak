@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Zadatak.Interfaces;
 using Zadatak.Models;
@@ -51,8 +44,7 @@ namespace Zadatak
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
-            //UOF
-            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+            
 
             //SWAGGER
             services.AddSwaggerGen(c =>
@@ -64,6 +56,9 @@ namespace Zadatak
             //DB
             services.AddDbContext<WorkContext>(opts =>opts.UseSqlServer(Configuration ["ConnectionString:WorkDB"]));
 
+            //UOF
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
             //MAPPER
             services.AddAutoMapper();
 
@@ -71,7 +66,7 @@ namespace Zadatak
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            //services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
 
         }
 

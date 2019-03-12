@@ -1,14 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Zadatak.DTOs
+namespace Zadatak.DTOs.Usage
 {
-    public class UsageDTO
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UsageDto
     {
+        /// <summary>
+        /// Gets or sets from.
+        /// </summary>
+        /// <value>
+        /// From.
+        /// </value>
         public DateTime From { get; set; }
 
+        /// <summary>
+        /// Gets or sets to.
+        /// </summary>
+        /// <value>
+        /// To.
+        /// </value>
         public DateTime? To { get; set; }
     }
 }

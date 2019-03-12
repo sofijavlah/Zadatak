@@ -1,19 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
-namespace Zadatak.DTOs
+namespace Zadatak.DTOs.Usage
 {
-    public class UsageUserDTO
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UsageUserDto
     {
-        public string UserFN { get; set; }
+        /// <summary>
+        /// Gets or sets the user function.
+        /// </summary>
+        /// <value>
+        /// The user function.
+        /// </value>
+        public string UserFn { get; set; }
 
-        public string UserLN { get; set; }
+        /// <summary>
+        /// Gets or sets the user ln.
+        /// </summary>
+        /// <value>
+        /// The user ln.
+        /// </value>
+        public string UserLn { get; set; }
 
+        /// <summary>
+        /// Gets or sets from.
+        /// </summary>
+        /// <value>
+        /// From.
+        /// </value>
         public DateTime From { get; set; }
 
+        /// <summary>
+        /// Gets or sets to.
+        /// </summary>
+        /// <value>
+        /// To.
+        /// </value>
         public DateTime? To { get; set; }
     }
 }

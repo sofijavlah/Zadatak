@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Dynamic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using AutoMapper;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
-using Swashbuckle.AspNetCore.Swagger;
 using Zadatak.DTOs;
+using Zadatak.DTOs.Device;
+using Zadatak.DTOs.Usage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 using Zadatak.Repositories;
@@ -25,20 +15,34 @@ namespace Zadatak.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [ApiController]
-    public class DeviceController : BaseController<Device, DeviceDTO>
+    public class DeviceController : BaseController<Device, DeviceDto>
     {
-        private IMapper _mapper;
+        /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
 
-        private IDeviceRepository _repository;
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IDeviceRepository _repository;
 
-        private IUnitOfWork _unitOFWork;
+        /// <summary>
+        /// The unit of work
+        /// </summary>
+        private readonly IUnitOfWork _unitOfWork;
 
-
-        public DeviceController(IMapper mapper, DeviceRepository repository, IUnitOfWork unitOFWork) : base(mapper, repository, unitOFWork)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceController"/> class.
+        /// </summary>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="repository">The repository.</param>
+        /// <param name="unitOfWork">The unit of work.</param>
+        public DeviceController(IMapper mapper, IDeviceRepository repository, IUnitOfWork unitOfWork) : base(mapper, repository, unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOFWork = unitOFWork;
+            _unitOfWork = unitOfWork;
         }
         
         // GET: api/Device
@@ -47,11 +51,11 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetDeviceUseHistory(DeviceDTO d)
+        public IActionResult GetDeviceUseHistory(DeviceDto d)
         {
             var usages = _repository.GetDeviceUseHistory(d.Id);
 
-            var history = usages.Select(x => _mapper.Map(x, new UsageUserDTO()));
+            var history = usages.Select(x => _mapper.Map(x, new UsageUserDto()));
 
             return Ok(history);
         }
@@ -62,17 +66,18 @@ namespace Zadatak.Controllers
         /// <param name="d">The d.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetDeviceCurrentInfo(DeviceDTO d)
+        public IActionResult GetDeviceCurrentInfo(DeviceDto d)
         {
-            var targetDevice = HostingApplication.Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
-                .FirstOrDefault(x => x.Name == d.Name);
+            //var targetDevice = _repository.Include(x => x.Employee).Include(x => x.UsageList)
+            //    .FirstOrDefault(x => x.Name == d.Name);
 
-            if (targetDevice == null) return NotFound("Device doesn't exist");
+            //if (targetDevice == null) return NotFound("Device doesn't exist");
 
-            var currentUsage = targetDevice.UsageList.Where(x => x.To == null)
-                .Select(x => Mapper.Map(x, new UsageUserDTO()));
+            //var currentUsage = targetDevice.UsageList.Where(x => x.To == null)
+            //    .Select(x => Mapper.Map(x, new UsageUserDTO()));
 
-            return Ok(currentUsage);
+            //return Ok(currentUsage);
+            return Ok();
         }
         
 
@@ -110,12 +115,7 @@ namespace Zadatak.Controllers
         //    return Ok("Added");
         //}
 
-        /// <summary>
-        /// Changes the device name or user.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="d">The d.</param>
-        /// <returns></returns>
+       
         //[HttpPut]
         //public IActionResult ChangeDeviceNameOrUser(long id, DeviceDTO d)
         //{
@@ -147,17 +147,5 @@ namespace Zadatak.Controllers
         //    return base.Put(id, d);
         //}
 
-        // DELETE: api/ApiWithActions/5
-        /// <summary>
-        /// Deletes the device.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException">Greska</exception>
-        [HttpDelete]
-        public IActionResult DeleteDevice (long id)
-        {
-            return base.Delete(id);
-        }
     }
 }
