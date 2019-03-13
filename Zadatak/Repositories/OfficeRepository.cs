@@ -22,6 +22,11 @@ namespace Zadatak.Repositories
         {
         }
 
+        /// <summary>
+        /// Gets the office.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns></returns>
         public Office GetOffice(string description)
         {
             return Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Description == description);

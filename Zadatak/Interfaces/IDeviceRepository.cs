@@ -17,6 +17,11 @@ namespace Zadatak.Interfaces
         /// <returns></returns>
         Device GetDeviceUseHistory(long id);
 
+        /// <summary>
+        /// Gets the device current information.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         Device GetDeviceCurrentInfo(long id);
     }
 }

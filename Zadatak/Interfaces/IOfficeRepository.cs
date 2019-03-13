@@ -10,6 +10,11 @@ namespace Zadatak.Interfaces
     /// </seealso>
     public interface IOfficeRepository : IRepository<Office>
     {
+        /// <summary>
+        /// Gets the office with given name
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns></returns>
         Office GetOffice(string description);
     }
 }

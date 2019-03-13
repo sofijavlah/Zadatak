@@ -35,6 +35,11 @@ namespace Zadatak.Repositories
             return list;
         }
 
+        /// <summary>
+        /// Gets the employee use history.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         public Employee GetEmployeeUseHistory(long id)
         {
             var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == id);
