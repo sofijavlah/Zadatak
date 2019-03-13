@@ -14,6 +14,12 @@ namespace Zadatak.UnitOfWork
 
         private IDbContextTransaction _transaction;
 
+        //private OfficeRepository _officeRepository;
+
+        //private EmployeeRepository _employeeRepository;
+
+        //private DeviceRepository _deviceRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>

@@ -1,12 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Zadatak.DTOs;
 using Zadatak.DTOs.Device;
 using Zadatak.DTOs.Usage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
-using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -27,21 +26,30 @@ namespace Zadatak.Controllers
         /// </summary>
         private readonly IDeviceRepository _repository;
 
+        private readonly IEmployeeRepository _employeeRepository;
+
+        private readonly IUsageRepository _usageRepository;
+
         /// <summary>
         /// The unit of work
         /// </summary>
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceController"/> class.
+        /// Initializes a new instance of the <see cref="DeviceController" /> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
+        /// <param name="employeeRepository">The employee repository.</param>
+        /// <param name="usageRepository">The usage repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public DeviceController(IMapper mapper, IDeviceRepository repository, IUnitOfWork unitOfWork) : base(mapper, repository, unitOfWork)
+        public DeviceController(IMapper mapper, IDeviceRepository repository, IEmployeeRepository employeeRepository, IUsageRepository usageRepository, IUnitOfWork unitOfWork) 
+            : base(mapper, repository, unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
+            _employeeRepository = employeeRepository;
+            _usageRepository = usageRepository;
             _unitOfWork = unitOfWork;
         }
         
@@ -51,101 +59,115 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetDeviceUseHistory(DeviceDto d)
+        public IActionResult GetDeviceUseHistory(long id)
         {
-            var usages = _repository.GetDeviceUseHistory(d.Id);
+            var device = _repository.GetDeviceUseHistory(id);
 
-            var history = usages.Select(x => _mapper.Map(x, new UsageUserDto()));
+            if (device == null) return BadRequest("Device doesn't exist");
 
-            return Ok(history);
+            var usages = device.UsageList.Select(x => _mapper.Map<UsageUserDto>(x));
+
+            return Ok(usages);
         }
 
         /// <summary>
         /// Gets the device current information.
         /// </summary>
-        /// <param name="d">The d.</param>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetDeviceCurrentInfo(DeviceDto d)
+        public IActionResult GetDeviceCurrentInfo(long id)
         {
-            //var targetDevice = _repository.Include(x => x.Employee).Include(x => x.UsageList)
-            //    .FirstOrDefault(x => x.Name == d.Name);
+            var device = _repository.GetDeviceCurrentInfo(id);
 
-            //if (targetDevice == null) return NotFound("Device doesn't exist");
+            if (device == null) return BadRequest("Device doesn't exist");
 
-            //var currentUsage = targetDevice.UsageList.Where(x => x.To == null)
-            //    .Select(x => Mapper.Map(x, new UsageUserDTO()));
+            var currInfo = device.UsageList.Where(x => x.To == null).Select(x => _mapper.Map<UsageUserDto>(x));
 
-            //return Ok(currentUsage);
-            return Ok();
+            return Ok(currInfo);
         }
-        
 
-        //// POST: api/Device
-        ///// <summary>
-        ///// Adds the device.
-        ///// </summary>
-        ///// <param name="d">The d.</param>
-        ///// <returns>
-        ///// Appropriate message if device was added, if it already exists or if employee wasn't found.
-        ///// </returns>
-        //[HttpPost]
-        //public IActionResult PostDevice(DeviceDTO d)
-        //{
-        //    var device = HostingApplication.Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Name == d.Name);
+        /// <summary>
+        /// Posts the specified dto.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public override IActionResult Post(DeviceDto dto)
+        {
+            _unitOfWork.Start();
 
-        //    if (device != null) return BadRequest("Device already exists");
+            var device = _mapper.Map<Device>(dto);
 
-        //    var newUsage = new DeviceUsage
-        //    {
-        //        From = DateTime.Now
-        //    };
+            _repository.Add(device);
+            _unitOfWork.Save();
 
-        //    base.Post(d);
+            var employee = device.Employee;
 
-        //    var newDevice = HostingApplication.Context.Devices.Include(x => x.Employee).First(x => x.Name == d.Name);
+            _usageRepository.Add(new DeviceUsage
+            {
+                Device = device,
+                Employee = employee,
+                From = DateTime.Now,
+                To = null
+            });
 
-        //    var employee = newDevice.Employee;
+            _unitOfWork.Commit();
+            _unitOfWork.Save();
 
-        //    HostingApplication.Context.DeviceUsages.Add(newUsage);
-        //    HostingApplication.Context.SaveChanges();
-        //    newUsage.Employee = employee;
-        //    newUsage.Device = newDevice;
-        //    HostingApplication.Context.SaveChanges();
-        //    return Ok("Added");
-        //}
+            return Ok("Added");
+        }
 
-       
-        //[HttpPut]
-        //public IActionResult ChangeDeviceNameOrUser(long id, DeviceDTO d)
-        //{
-        //    var device = HostingApplication.Context.Devices.Include(x => x.Employee).Include(x => x.UsageList).ThenInclude(x => x.Employee)
-        //        .FirstOrDefault(x => x.Id == id);
+        /// <summary>
+        /// Changes device name OR user.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="dto">The dto.</param>
+        /// <returns>
+        /// BadRequest if device with given id doesn't exist or if employee with given id doesn't exist. Ok with message "Changed name" OR "Changed User". 
+        /// </returns>
+        [HttpPut]
+        public override IActionResult Put(long id, DeviceDto dto)
+        {
+            if (_repository.Get(id) == null) return BadRequest("Device doesn't exist");
 
-        //    if (device == null) return BadRequest("Device doesn't exist");
+            var device = _repository.GetDeviceCurrentInfo(id);
 
-        //    var oldUser = device.Employee;
+            if (device.Employee.Id == dto.Employee.EmployeeId)
+            {
+                base.Put(id, dto);
 
-        //    var newUser = HostingApplication.Context.Employees.Find(d.Employee.EmployeeId);
+                return Ok("Changed device name");
+            }
 
-        //    if (oldUser.Id != newUser.Id)
-        //    {
-        //        var oldUsage = device.UsageList.First(x => x.To == null);
-        //        oldUsage.To = DateTime.Now;
+            _unitOfWork.Start();
 
-        //        var newUsage = new DeviceUsage
-        //        {
-        //            From = DateTime.Now,
+            var employee = _employeeRepository.Get(dto.Employee.EmployeeId);
 
-        //        };
-        //        HostingApplication.Context.DeviceUsages.Add(newUsage);
-        //        HostingApplication.Context.SaveChanges();
-        //        newUsage.Employee = newUser;
-        //        newUsage.Device = device;
-        //    }
+            if (employee == null) return BadRequest("Employee doesn't exist");
 
-        //    return base.Put(id, d);
-        //}
+            device.Employee = employee;
+            
+            var oldUsage = device.UsageList.First(x => x.To == null);
+
+            oldUsage.To = DateTime.Now;
+            
+            _unitOfWork.Save();
+
+            _usageRepository.Add(new DeviceUsage
+            {
+                From = DateTime.Now,
+                To = null,
+                Employee = employee,
+                Device = device
+            });
+
+            _unitOfWork.Save();
+
+            _unitOfWork.Commit();
+
+            return Ok("Changed User");
+        }
 
     }
 }

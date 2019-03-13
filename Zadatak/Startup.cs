@@ -67,6 +67,7 @@ namespace Zadatak
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<IUsageRepository, UsageRepository>();
 
         }
 

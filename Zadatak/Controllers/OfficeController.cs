@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Zadatak.DTOs.Employee;
 using Zadatak.DTOs.Office;
 using Zadatak.Interfaces;
 using Zadatak.Models;
-using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -21,8 +19,6 @@ namespace Zadatak.Controllers
 
         private readonly IOfficeRepository _repository;
 
-        private readonly IEmployeeRepository _employeeRepository;
-
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
@@ -30,13 +26,11 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
-        /// <param name="employeeRepository">The employee repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public OfficeController(IMapper mapper, IOfficeRepository repository, IEmployeeRepository employeeRepository, IUnitOfWork unitOfWork) : base (mapper, repository, unitOfWork)
+        public OfficeController(IMapper mapper, IOfficeRepository repository, IUnitOfWork unitOfWork) : base (mapper, repository, unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
-            _employeeRepository = employeeRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -50,11 +44,13 @@ namespace Zadatak.Controllers
         [HttpPost]
         public IActionResult GetOfficeEmployees(string description)
         {
-            var employees = _employeeRepository.GetOffice(description);
+            var office = _repository.GetOffice(description);
 
-           if (!employees.Any()) return NotFound("Office doesn't have any employees");
+            if (office == null) return BadRequest("Office doesn't exist");
 
-            var list = employees.Select(x => _mapper.Map<EmployeeDto>(x));
+            if (!office.Employees.Any()) return Ok("Office doesn't have any employees");
+
+            var list = office.Employees.Select(x => _mapper.Map<EmployeeDto>(x));
 
             return Ok(list);
 

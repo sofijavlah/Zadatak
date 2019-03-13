@@ -17,11 +17,13 @@ namespace Zadatak.Profiles
         {
             CreateMap<DeviceDto, Device>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Id, source => source.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Employee, source => source.Ignore())
                 .ForMember(dest => dest.EmployeeId, source => source.MapFrom(src => src.Employee.EmployeeId));
             CreateMap<Device, DeviceDto>()
                 .ForMember(dest => dest.Name, source => source.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Employee, source => source.MapFrom(src => src.Employee));
+                .ForMember(dest => dest.Employee, source => source.MapFrom(src => src.Employee))
+                .ForMember(dest => dest.Id, source => source.MapFrom(src => src.Id));
         }
     }
 }

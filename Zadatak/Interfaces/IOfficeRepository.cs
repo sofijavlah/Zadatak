@@ -10,5 +10,6 @@ namespace Zadatak.Interfaces
     /// </seealso>
     public interface IOfficeRepository : IRepository<Office>
     {
+        Office GetOffice(string description);
     }
 }

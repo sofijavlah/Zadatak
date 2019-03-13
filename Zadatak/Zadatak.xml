@@ -86,7 +86,7 @@
             The unit of work
             </summary>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IDeviceRepository,Zadatak.Interfaces.IUnitOfWork)">
+        <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IDeviceRepository,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUsageRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.
             </summary>
@@ -94,18 +94,28 @@
             <param name="repository">The repository.</param>
             <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(Zadatak.DTOs.Device.DeviceDto)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(System.Int64)">
             <summary>
             Gets the device use history.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
+        <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(System.Int64)">
             <summary>
             Gets the device current information.
             </summary>
             <param name="d">The d.</param>
             <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.Put(System.Int64,Zadatak.DTOs.Device.DeviceDto)">
+            <summary>
+            Changes device name or user.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="dto">The dto.</param>
+            <returns>
+            BadRequest if device with given id doesn't exist, Ok
+            </returns>
         </member>
         <member name="T:Zadatak.Controllers.EmployeeController">
             <summary>
@@ -128,7 +138,7 @@
             The unit of work
             </summary>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUnitOfWork)">
+        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IOfficeRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
             </summary>
@@ -136,11 +146,11 @@
             <param name="repository">The repository.</param>
             <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(Zadatak.DTOs.Employee.EmployeeDto)">
+        <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(System.Int64)">
             <summary>
             Gets the employee use history.
             </summary>
-            <param name="e">The e.</param>
+            <param name="id">The identifier.</param>
             <returns></returns>
         </member>
         <member name="T:Zadatak.Controllers.OfficeController">
@@ -149,13 +159,12 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IOfficeRepository,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUnitOfWork)">
+        <member name="M:Zadatak.Controllers.OfficeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IOfficeRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.OfficeController"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
-            <param name="employeeRepository">The employee repository.</param>
             <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.OfficeController.GetOfficeEmployees(System.String)">
@@ -366,12 +375,6 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
-        <member name="M:Zadatak.Interfaces.IDeviceRepository.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
-            <summary>
-            Gets the device current information.
-            </summary>
-            <param name="d">The d.</param>
-        </member>
         <member name="T:Zadatak.Interfaces.IEmployeeRepository">
             <summary>
             Interface for Employee Repository
@@ -379,20 +382,6 @@
             <seealso>
                 <cref>Repositories.IRepository{Models.Employee}</cref>
             </seealso>
-        </member>
-        <member name="M:Zadatak.Interfaces.IEmployeeRepository.GetEmployeeUseHistory(System.Int64)">
-            <summary>
-            Gets the employee use history.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Zadatak.Interfaces.IEmployeeRepository.GetOffice(System.String)">
-            <summary>
-            Gets the office.
-            </summary>
-            <param name="description">The description.</param>
-            <returns></returns>
         </member>
         <member name="T:Zadatak.Interfaces.IOfficeRepository">
             <summary>
@@ -463,6 +452,12 @@
             <summary>
             Commits this instance.
             </summary>
+        </member>
+        <member name="T:Zadatak.Interfaces.IUsageRepository">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:Zadatak.Interfaces.IRepository&lt;Zadatak.Models.DeviceUsage&gt;" />
         </member>
         <member name="T:Zadatak.Migrations.Prva">
             <summary>
@@ -845,7 +840,7 @@
             <returns></returns>
             <exception cref="T:System.Exception">Device doesn't exist</exception>
         </member>
-        <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceCurrentInfo(Zadatak.DTOs.Device.DeviceDto)">
+        <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceCurrentInfo(System.Int64)">
             <summary>
             Gets the device current information.
             </summary>
@@ -865,14 +860,6 @@
             Initializes a new instance of the <see cref="T:Zadatak.Repositories.EmployeeRepository"/> class.
             </summary>
             <param name="context">The context.</param>
-        </member>
-        <member name="M:Zadatak.Repositories.EmployeeRepository.GetEmployeeUseHistory(System.Int64)">
-            <summary>
-            Gets the employee use history.
-            </summary>
-            <param name="id">The identifier.</param>
-            <returns></returns>
-            <exception cref="T:System.Exception">Employee doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Repositories.EmployeeRepository.GetOffice(System.String)">
             <summary>
@@ -954,6 +941,19 @@
             Removes the specified entity.
             </summary>
             <param name="entity">The entity.</param>
+        </member>
+        <member name="T:Zadatak.Repositories.UsageRepository">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:Zadatak.Repositories.Repository&lt;Zadatak.Models.DeviceUsage&gt;" />
+            <seealso cref="T:Zadatak.Interfaces.IUsageRepository" />
+        </member>
+        <member name="M:Zadatak.Repositories.UsageRepository.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Repositories.UsageRepository"/> class.
+            </summary>
+            <param name="context">The context.</param>
         </member>
         <member name="T:Zadatak.Startup">
             <summary>

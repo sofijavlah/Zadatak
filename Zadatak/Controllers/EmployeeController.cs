@@ -5,7 +5,6 @@ using Zadatak.DTOs.Employee;
 using Zadatak.DTOs.Usage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
-using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -26,9 +25,7 @@ namespace Zadatak.Controllers
         /// The repository
         /// </summary>
         private readonly IEmployeeRepository _repository;
-
-        private readonly IDeviceRepository _deviceRepository;
-
+        
         /// <summary>
         /// The unit of work
         /// </summary>
@@ -41,28 +38,31 @@ namespace Zadatak.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public EmployeeController(IMapper mapper, IEmployeeRepository repository, IDeviceRepository deviceRepository, IUnitOfWork unitOfWork) : base(mapper, repository, unitOfWork)
+        public EmployeeController(IMapper mapper, IEmployeeRepository repository, IUnitOfWork unitOfWork)
+            : base(mapper, repository, unitOfWork)
         {
             _mapper = mapper;
             _repository = repository;
-            _deviceRepository = deviceRepository;
             _unitOfWork = unitOfWork;
         }
 
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GetEmployeeUseHistory(EmployeeDto e)
+        public IActionResult GetEmployeeUseHistory(long id)
         {
-            if (!_repository.GetEmployeeUseHistory(e.EmployeeId).Any()) return Ok("Employee hasn't used any devices");
+            var employee = _repository.GetEmployeeUseHistory(id);
 
-            var history = _mapper.Map<UsageDeviceDto>(_repository.GetEmployeeUseHistory(e.EmployeeId));
+            if (employee == null) return BadRequest("Employee doesn't exist");
 
-            return Ok(history);
+            if (!employee.UsageList.Any()) return Ok("Employee hasn't used any devices");
+
+            var usages = employee.UsageList.Select(x => _mapper.Map<UsageDeviceDto>(x));
+
+            return Ok(usages);
         }
-
     }
 }

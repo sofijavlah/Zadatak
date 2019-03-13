@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Zadatak.DTOs.Device;
-using Zadatak.Models;
+﻿using Zadatak.Models;
 
 namespace Zadatak.Interfaces
 {
@@ -17,12 +15,8 @@ namespace Zadatak.Interfaces
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        IEnumerable<DeviceUsage> GetDeviceUseHistory(long id);
+        Device GetDeviceUseHistory(long id);
 
-        /// <summary>
-        /// Gets the device current information.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        void GetDeviceCurrentInfo(DeviceDto d);
+        Device GetDeviceCurrentInfo(long id);
     }
 }

@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.Interfaces;
-using Zadatak.Repositories;
 
 namespace Zadatak.Controllers
 {
@@ -118,11 +117,11 @@ namespace Zadatak.Controllers
             _unitOfWork.Start();
 
             var entity = _repository.Get(id);
-
+            
             if (entity == null) return BadRequest("Doesn't exist");
 
-            Mapper.Map(dto, entity);
-
+            _mapper.Map(dto, entity);
+            
             _unitOfWork.Save();
             _unitOfWork.Commit();
 

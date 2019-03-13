@@ -21,5 +21,10 @@ namespace Zadatak.Repositories
         public OfficeRepository(WorkContext context) : base(context)
         {
         }
+
+        public Office GetOffice(string description)
+        {
+            return Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Description == description);
+        }
     }
 }

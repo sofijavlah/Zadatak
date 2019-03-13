@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.Interfaces;
@@ -26,24 +25,6 @@ namespace Zadatak.Repositories
         }
 
         /// <summary>
-        /// Gets the employee use history.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception">Employee doesn't exist</exception>
-        public IEnumerable<DeviceUsage> GetEmployeeUseHistory(long id)
-        {
-            var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device)
-                .FirstOrDefault(x => x.Id == id);
-
-            if (employee == null) throw new Exception("Employee doesn't exist");
-
-            var usages = employee.UsageList;
-
-            return usages;
-        }
-
-        /// <summary>
         /// Gets the office.
         /// </summary>
         /// <param name="description">The description.</param>
@@ -52,6 +33,13 @@ namespace Zadatak.Repositories
         {
             var list = Context.Employees.Include(x => x.Office).Where(x => x.Office.Description == description);
             return list;
+        }
+
+        public Employee GetEmployeeUseHistory(long id)
+        {
+            var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == id);
+
+            return employee;
         }
     }
 }

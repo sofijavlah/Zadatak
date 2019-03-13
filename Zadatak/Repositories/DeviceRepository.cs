@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Zadatak.DTOs.Device;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -32,26 +30,27 @@ namespace Zadatak.Repositories
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Device doesn't exist</exception>
-        public IEnumerable<DeviceUsage> GetDeviceUseHistory(long id)
+        public Device GetDeviceUseHistory(long id)
         {
             var device = Context.Devices.Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Id == id);
 
-            if (device == null) throw new Exception("Device doesn't exist");
-
-            var usages = device.UsageList;
-
-            return usages;
+            return device;
 
         }
 
         /// <summary>
         /// Gets the device current information.
         /// </summary>
-        /// <param name="d">The d.</param>
-        public void GetDeviceCurrentInfo(DeviceDto d)
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        public Device GetDeviceCurrentInfo(long id)
         {
+            var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
+                .FirstOrDefault(x => x.Id == id);
 
+            return device;
         }
+
 
     }
 }
