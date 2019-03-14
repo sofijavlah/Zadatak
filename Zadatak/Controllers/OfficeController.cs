@@ -41,7 +41,7 @@ namespace Zadatak.Controllers
         /// <returns>
         /// 400 error code if office doesn't exist, 200 with message: "Office doesn't have any..." if office empty or List of employees in office.
         /// </returns>
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetOfficeEmployees(string description)
         {
             var office = _repository.GetOffice(description);

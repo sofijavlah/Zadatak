@@ -1,4 +1,5 @@
-﻿using Zadatak.Models;
+﻿using Zadatak.DTOs.Device;
+using Zadatak.Models;
 
 namespace Zadatak.Interfaces
 {
@@ -23,5 +24,14 @@ namespace Zadatak.Interfaces
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         Device GetDeviceCurrentInfo(long id);
+
+        /// <summary>
+        /// Changes the device name or user.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="dto">The dto.</param>
+        void ChangeDeviceNameOrUser(long id, DeviceDto dto);
+
+        void Add(DeviceDto dto);
     }
 }

@@ -51,7 +51,7 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetEmployeeUseHistory(long id)
         {
             var employee = _repository.GetEmployeeUseHistory(id);
@@ -64,5 +64,7 @@ namespace Zadatak.Controllers
 
             return Ok(usages);
         }
+
+        
     }
 }

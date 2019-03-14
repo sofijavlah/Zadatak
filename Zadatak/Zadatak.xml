@@ -88,10 +88,12 @@
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IDeviceRepository,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUsageRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController" /> class.
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
+            <param name="employeeRepository">The employee repository.</param>
+            <param name="usageRepository">The usage repository.</param>
             <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(System.Int64)">
@@ -104,17 +106,24 @@
             <summary>
             Gets the device current information.
             </summary>
-            <param name="d">The d.</param>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Controllers.DeviceController.Post(Zadatak.DTOs.Device.DeviceDto)">
+            <summary>
+            Posts the specified dto.
+            </summary>
+            <param name="dto">The dto.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.Put(System.Int64,Zadatak.DTOs.Device.DeviceDto)">
             <summary>
-            Changes device name or user.
+            Changes device name OR user.
             </summary>
             <param name="id">The identifier.</param>
             <param name="dto">The dto.</param>
             <returns>
-            BadRequest if device with given id doesn't exist, Ok
+            BadRequest if device with given id doesn't exist or if employee with given id doesn't exist. Ok with message "Changed name" OR "Changed User". 
             </returns>
         </member>
         <member name="T:Zadatak.Controllers.EmployeeController">
@@ -138,7 +147,7 @@
             The unit of work
             </summary>
         </member>
-        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IOfficeRepository,Zadatak.Interfaces.IUnitOfWork)">
+        <member name="M:Zadatak.Controllers.EmployeeController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUnitOfWork)">
             <summary>
             Initializes a new instance of the <see cref="T:Zadatak.Controllers.EmployeeController"/> class.
             </summary>
@@ -375,6 +384,13 @@
             <param name="id">The identifier.</param>
             <returns></returns>
         </member>
+        <member name="M:Zadatak.Interfaces.IDeviceRepository.GetDeviceCurrentInfo(System.Int64)">
+            <summary>
+            Gets the device current information.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Zadatak.Interfaces.IEmployeeRepository">
             <summary>
             Interface for Employee Repository
@@ -383,6 +399,13 @@
                 <cref>Repositories.IRepository{Models.Employee}</cref>
             </seealso>
         </member>
+        <member name="M:Zadatak.Interfaces.IEmployeeRepository.GetEmployeeUseHistory(System.Int64)">
+            <summary>
+            Gets the employee use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Zadatak.Interfaces.IOfficeRepository">
             <summary>
             Interface for Office Repository
@@ -390,6 +413,13 @@
             <seealso>
                 <cref>Repositories.IRepository{Models.Office}</cref>
             </seealso>
+        </member>
+        <member name="M:Zadatak.Interfaces.IOfficeRepository.GetOffice(System.String)">
+            <summary>
+            Gets the office with given name
+            </summary>
+            <param name="description">The description.</param>
+            <returns></returns>
         </member>
         <member name="T:Zadatak.Interfaces.IRepository`1">
             <summary>
@@ -454,10 +484,13 @@
             </summary>
         </member>
         <member name="T:Zadatak.Interfaces.IUsageRepository">
-            <summary>
+             <summary>
+             Interface for Usage Repository
+             </summary>
             
-            </summary>
-            <seealso cref="!:Zadatak.Interfaces.IRepository&lt;Zadatak.Models.DeviceUsage&gt;" />
+            <seealso>
+                 <cref>Repositories.IRepository{Models.DeviceUsage}</cref>
+             </seealso>
         </member>
         <member name="T:Zadatak.Migrations.Prva">
             <summary>
@@ -689,7 +722,7 @@
             </summary>
             <seealso cref="T:Microsoft.EntityFrameworkCore.DbContext" />
         </member>
-        <member name="F:Zadatak.Models.WorkContext.ho">
+        <member name="F:Zadatak.Models.WorkContext._ho">
             <summary>
             The ho
             </summary>
@@ -844,7 +877,8 @@
             <summary>
             Gets the device current information.
             </summary>
-            <param name="d">The d.</param>
+            <param name="id">The identifier.</param>
+            <returns></returns>
         </member>
         <member name="T:Zadatak.Repositories.EmployeeRepository">
             <summary>
@@ -868,6 +902,13 @@
             <param name="description">The description.</param>
             <returns></returns>
         </member>
+        <member name="M:Zadatak.Repositories.EmployeeRepository.GetEmployeeUseHistory(System.Int64)">
+            <summary>
+            Gets the employee use history.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
         <member name="T:Zadatak.Repositories.OfficeRepository">
             <summary>
             Office Repository
@@ -882,6 +923,13 @@
             Initializes a new instance of the <see cref="T:Zadatak.Repositories.OfficeRepository"/> class.
             </summary>
             <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.Repositories.OfficeRepository.GetOffice(System.String)">
+            <summary>
+            Gets the office.
+            </summary>
+            <param name="description">The description.</param>
+            <returns></returns>
         </member>
         <member name="T:Zadatak.Repositories.Repository`1">
             <summary>
@@ -946,7 +994,9 @@
             <summary>
             
             </summary>
-            <seealso cref="!:Zadatak.Repositories.Repository&lt;Zadatak.Models.DeviceUsage&gt;" />
+            <seealso>
+                <cref>Repositories.Repository{Models.DeviceUsage}</cref>
+            </seealso>
             <seealso cref="T:Zadatak.Interfaces.IUsageRepository" />
         </member>
         <member name="M:Zadatak.Repositories.UsageRepository.#ctor(Zadatak.Models.WorkContext)">

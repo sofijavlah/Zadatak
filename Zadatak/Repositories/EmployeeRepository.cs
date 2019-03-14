@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.Interfaces;
@@ -45,6 +46,15 @@ namespace Zadatak.Repositories
             var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == id);
 
             return employee;
+        }
+
+        public Employee GetDeviceUser(long id)
+        {
+            var device = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
+
+            if (device == null) throw new Exception("Device doesn't exist");
+
+            return device.Employee;
         }
     }
 }

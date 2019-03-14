@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Zadatak.DTOs.Device;
 using Zadatak.DTOs.Usage;
 using Zadatak.Interfaces;
@@ -95,27 +96,10 @@ namespace Zadatak.Controllers
         [HttpPost]
         public override IActionResult Post(DeviceDto dto)
         {
-            _unitOfWork.Start();
+            _repository.Add(dto);
+            _usageRepository.Add(dto);
 
-            var device = _mapper.Map<Device>(dto);
-
-            _repository.Add(device);
-            _unitOfWork.Save();
-
-            var employee = device.Employee;
-
-            _usageRepository.Add(new DeviceUsage
-            {
-                Device = device,
-                Employee = employee,
-                From = DateTime.Now,
-                To = null
-            });
-
-            _unitOfWork.Commit();
-            _unitOfWork.Save();
-
-            return Ok("Added");
+            return Ok("Device added");
         }
 
         /// <summary>
@@ -129,44 +113,16 @@ namespace Zadatak.Controllers
         [HttpPut]
         public override IActionResult Put(long id, DeviceDto dto)
         {
-            if (_repository.Get(id) == null) return BadRequest("Device doesn't exist");
-
             var device = _repository.GetDeviceCurrentInfo(id);
 
-            if (device.Employee.Id == dto.Employee.EmployeeId)
-            {
-                base.Put(id, dto);
+            var usage = device.UsageList.FirstOrDefault(x => x.To == null);
 
-                return Ok("Changed device name");
-            }
+            _usageRepository.Update(usage);
+            _repository.ChangeDeviceNameOrUser(id, dto);
+            _usageRepository.Add(dto);
 
-            _unitOfWork.Start();
+            return Ok("Changed");
 
-            var employee = _employeeRepository.Get(dto.Employee.EmployeeId);
-
-            if (employee == null) return BadRequest("Employee doesn't exist");
-
-            device.Employee = employee;
-            
-            var oldUsage = device.UsageList.First(x => x.To == null);
-
-            oldUsage.To = DateTime.Now;
-            
-            _unitOfWork.Save();
-
-            _usageRepository.Add(new DeviceUsage
-            {
-                From = DateTime.Now,
-                To = null,
-                Employee = employee,
-                Device = device
-            });
-
-            _unitOfWork.Save();
-
-            _unitOfWork.Commit();
-
-            return Ok("Changed User");
         }
 
     }

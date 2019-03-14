@@ -1,4 +1,6 @@
-﻿using Zadatak.Interfaces;
+﻿using System;
+using Zadatak.DTOs.Device;
+using Zadatak.Interfaces;
 using Zadatak.Models;
 
 namespace Zadatak.Repositories
@@ -20,5 +22,39 @@ namespace Zadatak.Repositories
         {
         }
 
+        /// <summary>
+        /// Adds the specified dto.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        public void Add(DeviceDto dto)
+        {
+            var device = Context.Devices.Find(dto.Id);
+
+            var user = Context.Employees.Find(dto.Employee.EmployeeId);
+
+            Context.DeviceUsages.Add(new DeviceUsage
+            {
+                From = DateTime.Now,
+                To = null,
+                Device = device,
+                Employee = user
+            });
+
+            Context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Updates the specified device usage.
+        /// </summary>
+        /// <param name="deviceUsage">The device usage.</param>
+        public override void Update(DeviceUsage deviceUsage)
+        {
+            var usage = Context.DeviceUsages.Find(deviceUsage.Id);
+
+            usage.To = DateTime.Now;
+
+            Context.SaveChanges();
+
+        }
     }
 }
