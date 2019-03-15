@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -47,7 +48,11 @@ namespace Zadatak.Repositories
         /// <returns></returns>
         public virtual TEntity Get(long id)
         {
-            return Context.Set<TEntity>().Find(id);
+            var entity = Context.Set<TEntity>().Find(id);
+
+            if(entity == null) throw new CustomException("Doesn't exist");
+
+            return entity;
         }
 
         /// <summary>

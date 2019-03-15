@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 
 namespace Zadatak.Controllers
@@ -65,7 +66,7 @@ namespace Zadatak.Controllers
         {
             var entity = _repository.Get(id);
 
-            if (entity == null) return NotFound("Doesn't exist");
+            if (entity == null) throw new CustomException("Doesn't exist");
 
             var dto = _mapper.Map(entity, new TDto());
 
@@ -90,7 +91,7 @@ namespace Zadatak.Controllers
 
             catch (Exception)
             {
-                throw new Exception("Cannot add");
+                throw new CustomException("Cannot add");
             }
             
             return Ok("Added");
@@ -108,8 +109,6 @@ namespace Zadatak.Controllers
         {
             var entity = _repository.Get(id);
             
-            if (entity == null) return BadRequest("Doesn't exist");
-
             _mapper.Map(dto, entity);
             
             return Ok("Changed");
@@ -126,19 +125,8 @@ namespace Zadatak.Controllers
         {
             var entity = _repository.Get(id);
 
-            if (entity == null) return BadRequest("Doesn't exist");
-            try
-            {
-                _repository.Remove(entity);
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ex.GetBaseException() is SqlException sqlException)
-                {
-                    var exNum = sqlException.Number;
-                    if (exNum == 547) return BadRequest("Cannot be deleted");
-                }
-            }
+            _repository.Remove(entity);
+            
             return Ok("Deleted");
         }
     }

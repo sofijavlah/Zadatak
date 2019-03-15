@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.DTOs.Device;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -35,6 +36,8 @@ namespace Zadatak.Repositories
         {
             var device = Context.Devices.Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Id == id);
 
+            if(device == null) throw new CustomException("Doesn't exist");
+
             return device;
 
         }
@@ -48,6 +51,8 @@ namespace Zadatak.Repositories
         {
             var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
                 .FirstOrDefault(x => x.Id == id);
+
+            if (device == null) throw new CustomException("Doesn't exist");
 
             return device;
         }
@@ -88,7 +93,7 @@ namespace Zadatak.Repositories
         {
             var device = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
 
-            if (device == null) throw new Exception("Device doesn't exist");
+            if (device == null) throw new CustomException("Device doesn't exist");
 
             if (dto.Name != null && dto.Name != device.Name)
             {

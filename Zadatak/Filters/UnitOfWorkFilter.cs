@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -39,18 +43,30 @@ namespace Zadatak.UnitOfWork
                     _unitOfWork.Save();
                     _unitOfWork.Commit();
                 }
-                catch (Exception)
-                {
-                    throw new Exception("ERROR");
-                }
                 
+                catch (DbUpdateException ex)
+                {
+                    if (ex.GetBaseException() is SqlException sqlException)
+                    {
+                        var exNum = sqlException.Number;
+                        if (exNum == 547) throw new CustomException("Cannot delete"); ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    }
+                }
+
+                catch (CustomException e)
+                {
+                    throw new CustomException("MY_ERROR!");
+                }
+
+
+
             }
 
             else
             {
                 _context.Database.RollbackTransaction();
 
-                throw new Exception("ERROR");
+                throw new CustomException("ERROR");
             }
         }
     }

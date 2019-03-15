@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using Zadatak.Filters;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 using Zadatak.Repositories;
@@ -42,7 +43,14 @@ namespace Zadatak
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => options.Filters.Add(typeof (UnitOfWorkFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(UnitOfWorkFilter));
+                options.Filters.Add(typeof(MyReturnFilter));
+                options.Filters.Add(typeof(MyExceptionFilter));
+
+
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             //SWAGGER
             services.AddSwaggerGen(c =>
