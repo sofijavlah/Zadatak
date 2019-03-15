@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 using Zadatak.Repositories;
+using Zadatak.UnitOfWork;
 
 namespace Zadatak
 {
@@ -41,11 +42,8 @@ namespace Zadatak
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-
+            services.AddMvc(options => options.Filters.Add(typeof (UnitOfWorkFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
-
             //SWAGGER
             services.AddSwaggerGen(c =>
             {

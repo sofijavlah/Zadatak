@@ -12,6 +12,6 @@ namespace Zadatak.Interfaces
     /// </seealso>
     public interface IUsageRepository : IRepository<DeviceUsage>
     {
-        void Add(DeviceDto dto);
+        void Add(Device device);
     }
 }

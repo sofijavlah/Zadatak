@@ -8,7 +8,7 @@ using Zadatak.Models;
 
 namespace Zadatak.UnitOfWork
 {
-    public class UnitOfWorkFilter : ActionFilterAttribute
+    public class UnitOfWorkFilter : IActionFilter
     {
         private readonly WorkContext _context;
 
@@ -20,26 +20,37 @@ namespace Zadatak.UnitOfWork
             _unitOfWork = unitOfWork;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.HttpContext.Request.Method.Equals("Get")) return;
+            if (context.HttpContext.Request.Method.Equals("Get")) return;
 
             _unitOfWork.Start();
         }
 
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (!context.HttpContext.Request.Method.Equals("Post", StringComparison.OrdinalIgnoreCase))
-                return;
+            if (context.HttpContext.Request.Method.Equals("Get")) return;
 
             if (context.Exception == null && context.ModelState.IsValid)
             {
-                _unitOfWork.Commit();
+
+                try
+                {
+                    _unitOfWork.Save();
+                    _unitOfWork.Commit();
+                }
+                catch (Exception)
+                {
+                    throw new Exception("ERROR");
+                }
+                
             }
 
             else
             {
                 _context.Database.RollbackTransaction();
+
+                throw new Exception("ERROR");
             }
         }
     }

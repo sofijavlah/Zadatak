@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Zadatak.DTOs.Device;
 using Zadatak.Interfaces;
 using Zadatak.Models;
@@ -26,18 +27,14 @@ namespace Zadatak.Repositories
         /// Adds the specified dto.
         /// </summary>
         /// <param name="dto">The dto.</param>
-        public void Add(DeviceDto dto)
+        public void Add(Device device)
         {
-            var device = Context.Devices.Find(dto.Id);
-
-            var user = Context.Employees.Find(dto.Employee.EmployeeId);
-
             Context.DeviceUsages.Add(new DeviceUsage
             {
                 From = DateTime.Now,
                 To = null,
                 Device = device,
-                Employee = user
+                Employee = device.Employee
             });
 
             Context.SaveChanges();

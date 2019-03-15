@@ -52,6 +52,15 @@ namespace Zadatak.Repositories
             return device;
         }
 
+       
+        public Device GetDeviceByName(string name)
+        {
+            var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
+                .FirstOrDefault(x => x.Name == name);
+
+            return device;
+        }
+
         /// <summary>
         /// Adds the specified dto.
         /// </summary>

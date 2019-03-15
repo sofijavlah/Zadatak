@@ -27,23 +27,16 @@ namespace Zadatak.Controllers
         private readonly IEmployeeRepository _repository;
         
         /// <summary>
-        /// The unit of work
-        /// </summary>
-        private readonly IUnitOfWork _unitOfWork;
-
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public EmployeeController(IMapper mapper, IEmployeeRepository repository, IUnitOfWork unitOfWork)
-            : base(mapper, repository, unitOfWork)
+        public EmployeeController(IMapper mapper, IEmployeeRepository repository)
+            : base(mapper, repository)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOfWork = unitOfWork;
         }
 
         /// <summary>

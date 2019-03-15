@@ -28,19 +28,16 @@ namespace Zadatak.Controllers
 
         private readonly IRepository<TEntity> _repository;
 
-        private readonly IUnitOfWork _unitOfWork;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseController{TEntity, TDto}"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public BaseController(IMapper mapper, IRepository<TEntity> repository, IUnitOfWork unitOfWork)
+        public BaseController(IMapper mapper, IRepository<TEntity> repository)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOfWork = unitOfWork;
         }
 
         // GET: api/Base
@@ -84,8 +81,6 @@ namespace Zadatak.Controllers
         [HttpPost]
         public virtual IActionResult Post(TDto dto)
         {
-            _unitOfWork.Start();
-
             try
             {
                 var entity = _mapper.Map<TEntity>(dto);
@@ -97,10 +92,7 @@ namespace Zadatak.Controllers
             {
                 throw new Exception("Cannot add");
             }
-
-            _unitOfWork.Save();
-            _unitOfWork.Commit();
-
+            
             return Ok("Added");
         }
 
@@ -114,17 +106,12 @@ namespace Zadatak.Controllers
         [HttpPut]
         public virtual IActionResult Put(long id, TDto dto)
         {
-            _unitOfWork.Start();
-
             var entity = _repository.Get(id);
             
             if (entity == null) return BadRequest("Doesn't exist");
 
             _mapper.Map(dto, entity);
             
-            _unitOfWork.Save();
-            _unitOfWork.Commit();
-
             return Ok("Changed");
         }
 

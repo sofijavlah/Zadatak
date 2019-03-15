@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Storage;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -13,12 +14,6 @@ namespace Zadatak.UnitOfWork
         private readonly WorkContext _context;
 
         private IDbContextTransaction _transaction;
-
-        //private OfficeRepository _officeRepository;
-
-        //private EmployeeRepository _employeeRepository;
-
-        //private DeviceRepository _deviceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.

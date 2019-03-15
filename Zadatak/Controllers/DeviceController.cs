@@ -32,11 +32,6 @@ namespace Zadatak.Controllers
         private readonly IUsageRepository _usageRepository;
 
         /// <summary>
-        /// The unit of work
-        /// </summary>
-        private readonly IUnitOfWork _unitOfWork;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DeviceController" /> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
@@ -44,14 +39,13 @@ namespace Zadatak.Controllers
         /// <param name="employeeRepository">The employee repository.</param>
         /// <param name="usageRepository">The usage repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public DeviceController(IMapper mapper, IDeviceRepository repository, IEmployeeRepository employeeRepository, IUsageRepository usageRepository, IUnitOfWork unitOfWork) 
-            : base(mapper, repository, unitOfWork)
+        public DeviceController(IMapper mapper, IDeviceRepository repository, IEmployeeRepository employeeRepository, IUsageRepository usageRepository) 
+            : base(mapper, repository)
         {
             _mapper = mapper;
             _repository = repository;
             _employeeRepository = employeeRepository;
             _usageRepository = usageRepository;
-            _unitOfWork = unitOfWork;
         }
         
         // GET: api/Device
@@ -97,7 +91,10 @@ namespace Zadatak.Controllers
         public override IActionResult Post(DeviceDto dto)
         {
             _repository.Add(dto);
-            _usageRepository.Add(dto);
+
+            var device = _repository.GetDeviceByName(dto.Name);
+
+            _usageRepository.Add(device);
 
             return Ok("Device added");
         }
@@ -119,7 +116,7 @@ namespace Zadatak.Controllers
 
             _usageRepository.Update(usage);
             _repository.ChangeDeviceNameOrUser(id, dto);
-            _usageRepository.Add(dto);
+            _usageRepository.Add(device);
 
             return Ok("Changed");
 

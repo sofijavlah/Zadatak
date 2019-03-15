@@ -33,5 +33,7 @@ namespace Zadatak.Interfaces
         void ChangeDeviceNameOrUser(long id, DeviceDto dto);
 
         void Add(DeviceDto dto);
+
+        Device GetDeviceByName(string name);
     }
 }

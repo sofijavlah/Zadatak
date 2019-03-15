@@ -27,11 +27,10 @@ namespace Zadatak.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
         /// <param name="unitOfWork">The unit of work.</param>
-        public OfficeController(IMapper mapper, IOfficeRepository repository, IUnitOfWork unitOfWork) : base (mapper, repository, unitOfWork)
+        public OfficeController(IMapper mapper, IOfficeRepository repository) : base (mapper, repository)
         {
             _mapper = mapper;
             _repository = repository;
-            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -76,10 +75,7 @@ namespace Zadatak.Controllers
             if (!office.Employees.Any()) return Ok("No employees in this office");
 
             office.Employees.RemoveRange(0, office.Employees.Count);
-
-            _unitOfWork.Save();
-            _unitOfWork.Commit();
-
+            
             return Ok("Employees removed");
         }
     }
