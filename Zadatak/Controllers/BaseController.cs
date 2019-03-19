@@ -4,11 +4,13 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 
 namespace Zadatak.Controllers
 {
+    [GenericClass]
     /// <summary>
     /// 
     /// </summary>
@@ -41,6 +43,7 @@ namespace Zadatak.Controllers
             _repository = repository;
         }
 
+        [NoUnitOfWork]
         // GET: api/Base
         /// <summary>
         /// Gets all.
@@ -53,6 +56,7 @@ namespace Zadatak.Controllers
             return Ok(entities);
         }
 
+        [NoUnitOfWork]
         // GET: api/Base/5
         /// <summary>
         /// Gets the specified identifier.

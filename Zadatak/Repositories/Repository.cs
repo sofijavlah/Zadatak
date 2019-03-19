@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Zadatak.Attributes;
 using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
 namespace Zadatak.Repositories
 {
+    [GenericClass]
     /// <summary>
     /// Generic Repository
     /// </summary>
@@ -32,6 +34,7 @@ namespace Zadatak.Repositories
             Context = context;
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets all.
         /// </summary>
@@ -41,6 +44,7 @@ namespace Zadatak.Repositories
             return Context.Set<TEntity>().ToList();
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the specified identifier.
         /// </summary>

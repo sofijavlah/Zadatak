@@ -3,8 +3,10 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.DTOs.Usage;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -47,7 +49,8 @@ namespace Zadatak.Controllers
             _employeeRepository = employeeRepository;
             _usageRepository = usageRepository;
         }
-        
+
+        [NoUnitOfWork]
         // GET: api/Device
         /// <summary>
         /// Gets the device use history.
@@ -58,13 +61,14 @@ namespace Zadatak.Controllers
         {
             var device = _repository.GetDeviceUseHistory(id);
 
-            if (device == null) return BadRequest("Device doesn't exist");
+            if (device == null) throw new CustomException("Device doesn't exist");
 
             var usages = device.UsageList.Select(x => _mapper.Map<UsageUserDto>(x));
 
             return Ok(usages);
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the device current information.
         /// </summary>
@@ -75,7 +79,7 @@ namespace Zadatak.Controllers
         {
             var device = _repository.GetDeviceCurrentInfo(id);
 
-            if (device == null) return BadRequest("Device doesn't exist");
+            if (device == null) throw new CustomException("Device doesn't exist");
 
             var currInfo = device.UsageList.Where(x => x.To == null).Select(x => _mapper.Map<UsageUserDto>(x));
 

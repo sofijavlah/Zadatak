@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -22,6 +23,7 @@ namespace Zadatak.Repositories
         {
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the office.
         /// </summary>

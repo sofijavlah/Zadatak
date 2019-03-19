@@ -13,6 +13,7 @@ namespace Zadatak.UnitOfWork
     {
         private readonly WorkContext _context;
 
+        private bool isReadOnly;
         private IDbContextTransaction _transaction;
 
         /// <summary>
@@ -24,11 +25,19 @@ namespace Zadatak.UnitOfWork
             _context = context;
         }
 
+        public bool GetReadOnly()
+        {
+            return isReadOnly;
+        }
+
         /// <summary>
         /// Starts this instance.
         /// </summary>
-        public void Start()
+        /// <param name="disable"></param>
+        public void Start(bool disable)
         {
+            isReadOnly = disable;
+            if (isReadOnly) return; 
             _transaction = _context.Database.BeginTransaction();
         }
 
@@ -45,6 +54,7 @@ namespace Zadatak.UnitOfWork
         /// </summary>
         public void Commit()
         {
+            if (isReadOnly) return;
             _transaction.Commit();
         }
 

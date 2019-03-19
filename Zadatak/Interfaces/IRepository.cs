@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Zadatak.Attributes;
 
 namespace Zadatak.Interfaces
 {
+    
     /// <summary>
     /// Generic repository
     /// </summary>

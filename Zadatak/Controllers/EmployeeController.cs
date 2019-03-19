@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Zadatak.Attributes;
 using Zadatak.DTOs.Employee;
 using Zadatak.DTOs.Usage;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -39,6 +41,7 @@ namespace Zadatak.Controllers
             _repository = repository;
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
@@ -49,7 +52,7 @@ namespace Zadatak.Controllers
         {
             var employee = _repository.GetEmployeeUseHistory(id);
 
-            if (employee == null) return BadRequest("Employee doesn't exist");
+            if (employee == null) throw new CustomException("Employee doesn't exist");
 
             if (!employee.UsageList.Any()) return Ok("Employee hasn't used any devices");
 

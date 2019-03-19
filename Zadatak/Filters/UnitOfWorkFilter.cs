@@ -4,8 +4,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
@@ -26,14 +28,19 @@ namespace Zadatak.UnitOfWork
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.HttpContext.Request.Method.Equals("Get")) return;
+            var actionDesc = context.ActionDescriptor as ControllerActionDescriptor;
 
-            _unitOfWork.Start();
+            if (actionDesc == null) return;
+
+            bool disable = Attribute.IsDefined(actionDesc.MethodInfo, typeof(NoUnitOfWork));
+
+            _unitOfWork.Start(disable);
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.HttpContext.Request.Method.Equals("Get")) return;
+
+            if (_unitOfWork.GetReadOnly()) return;
 
             if (context.Exception == null && context.ModelState.IsValid)
             {
@@ -52,21 +59,16 @@ namespace Zadatak.UnitOfWork
                         if (exNum == 547) throw new CustomException("Cannot delete"); ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     }
                 }
-
                 catch (CustomException e)
                 {
-                    throw new CustomException("MY_ERROR!");
+                    throw e;
                 }
-
-
-
             }
-
             else
             {
                 _context.Database.RollbackTransaction();
 
-                throw new CustomException("ERROR");
+                throw context.Exception;
             }
         }
     }

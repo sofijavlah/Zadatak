@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.Exceptions;
 using Zadatak.Interfaces;
@@ -26,6 +27,7 @@ namespace Zadatak.Repositories
         {
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the device use history.
         /// </summary>
@@ -41,7 +43,8 @@ namespace Zadatak.Repositories
             return device;
 
         }
-        
+
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the device current information.
         /// </summary>
@@ -57,7 +60,7 @@ namespace Zadatak.Repositories
             return device;
         }
 
-       
+        [NoUnitOfWork]
         public Device GetDeviceByName(string name)
         {
             var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)

@@ -1,8 +1,11 @@
 ﻿using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Zadatak.Attributes;
 using Zadatak.DTOs.Employee;
 using Zadatak.DTOs.Office;
+using Zadatak.Exceptions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -33,6 +36,7 @@ namespace Zadatak.Controllers
             _repository = repository;
         }
 
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the office employees.
         /// </summary>
@@ -40,12 +44,12 @@ namespace Zadatak.Controllers
         /// <returns>
         /// 400 error code if office doesn't exist, 200 with message: "Office doesn't have any..." if office empty or List of employees in office.
         /// </returns>
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetOfficeEmployees(string description)
         {
             var office = _repository.GetOffice(description);
 
-            if (office == null) return BadRequest("Office doesn't exist");
+            if (office == null) throw new CustomException("Office doesn't exist");
 
             if (!office.Employees.Any()) return Ok("Office doesn't have any employees");
 
@@ -66,11 +70,11 @@ namespace Zadatak.Controllers
         [HttpDelete]
         public IActionResult DeleteJustEmployees(long id)
         {
-            _unitOfWork.Start();
+            _unitOfWork.Start(_unitOfWork.GetReadOnly());
 
             var office = _repository.Get(id);
 
-            if (office == null) return BadRequest("Office doesn't exist");
+            if (office == null) throw new CustomException("Office doesn't exist");
 
             if (!office.Employees.Any()) return Ok("No employees in this office");
 

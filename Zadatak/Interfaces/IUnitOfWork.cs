@@ -16,7 +16,10 @@ namespace Zadatak.Interfaces
         /// <summary>
         /// Starts this instance.
         /// </summary>
-        void Start();
+        /// <param name="disable"></param>
+        void Start(bool disable);
+
+        bool GetReadOnly();
 
         /// <summary>
         /// Commits this instance.

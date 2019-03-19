@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -25,17 +26,7 @@ namespace Zadatak.Repositories
         {
         }
 
-        /// <summary>
-        /// Gets the office.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <returns></returns>
-        public IEnumerable<Employee> GetOffice(string description)
-        {
-            var list = Context.Employees.Include(x => x.Office).Where(x => x.Office.Description == description);
-            return list;
-        }
-
+        [NoUnitOfWork]
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
@@ -46,15 +37,6 @@ namespace Zadatak.Repositories
             var employee = Context.Employees.Include(x => x.UsageList).ThenInclude(x => x.Device).FirstOrDefault(x => x.Id == id);
 
             return employee;
-        }
-
-        public Employee GetDeviceUser(long id)
-        {
-            var device = Context.Devices.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
-
-            if (device == null) throw new Exception("Device doesn't exist");
-
-            return device.Employee;
         }
     }
 }
