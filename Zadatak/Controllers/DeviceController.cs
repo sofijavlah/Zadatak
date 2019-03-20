@@ -34,13 +34,12 @@ namespace Zadatak.Controllers
         private readonly IUsageRepository _usageRepository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceController" /> class.
+        /// Initializes a new instance of the <see cref="DeviceController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
         /// <param name="employeeRepository">The employee repository.</param>
         /// <param name="usageRepository">The usage repository.</param>
-        /// <param name="unitOfWork">The unit of work.</param>
         public DeviceController(IMapper mapper, IDeviceRepository repository, IEmployeeRepository employeeRepository, IUsageRepository usageRepository) 
             : base(mapper, repository)
         {
@@ -50,12 +49,14 @@ namespace Zadatak.Controllers
             _usageRepository = usageRepository;
         }
 
-        [NoUnitOfWork]
-        // GET: api/Device
         /// <summary>
         /// Gets the device use history.
         /// </summary>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
+        /// <exception cref="CustomException">Device doesn't exist</exception>
+        [NoUnitOfWork]
+        // GET: api/Device
         [HttpPost]
         public IActionResult GetDeviceUseHistory(long id)
         {
@@ -68,12 +69,13 @@ namespace Zadatak.Controllers
             return Ok(usages);
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets the device current information.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
+        /// <exception cref="CustomException">Device doesn't exist</exception>
+        [NoUnitOfWork]
         [HttpPost]
         public IActionResult GetDeviceCurrentInfo(long id)
         {

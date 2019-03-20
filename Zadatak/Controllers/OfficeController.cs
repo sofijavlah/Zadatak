@@ -21,29 +21,25 @@ namespace Zadatak.Controllers
         private readonly IMapper _mapper;
 
         private readonly IOfficeRepository _repository;
-
-        private readonly IUnitOfWork _unitOfWork;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="OfficeController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
-        /// <param name="unitOfWork">The unit of work.</param>
         public OfficeController(IMapper mapper, IOfficeRepository repository) : base (mapper, repository)
         {
             _mapper = mapper;
             _repository = repository;
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets the office employees.
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <returns>
-        /// 400 error code if office doesn't exist, 200 with message: "Office doesn't have any..." if office empty or List of employees in office.
-        /// </returns>
+        /// <returns></returns>
+        /// <exception cref="CustomException">Office doesn't exist</exception>
+        [NoUnitOfWork]
         [HttpPost]
         public IActionResult GetOfficeEmployees(string description)
         {
@@ -70,8 +66,6 @@ namespace Zadatak.Controllers
         [HttpDelete]
         public IActionResult DeleteJustEmployees(long id)
         {
-            _unitOfWork.Start(_unitOfWork.GetReadOnly());
-
             var office = _repository.Get(id);
 
             if (office == null) throw new CustomException("Office doesn't exist");

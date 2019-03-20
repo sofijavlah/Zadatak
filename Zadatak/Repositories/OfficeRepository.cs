@@ -13,6 +13,7 @@ namespace Zadatak.Repositories
     ///     <cref>Repositories.Repository{Models.Office}</cref>
     /// </seealso>
     /// <seealso cref="IOfficeRepository" />
+    [DefineScopeType]
     public class OfficeRepository : Repository<Office>, IOfficeRepository
     {
         /// <summary>
@@ -23,12 +24,12 @@ namespace Zadatak.Repositories
         {
         }
 
-        [NoUnitOfWork]
         /// <summary>
-        /// Gets the office.
+        /// Gets the office with given name
         /// </summary>
         /// <param name="description">The description.</param>
         /// <returns></returns>
+        [NoUnitOfWork]
         public Office GetOffice(string description)
         {
             return Context.Offices.Include(x => x.Employees).FirstOrDefault(x => x.Description == description);

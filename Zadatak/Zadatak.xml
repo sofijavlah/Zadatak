@@ -4,9 +4,21 @@
         <name>Zadatak</name>
     </assembly>
     <members>
-        <member name="T:Zadatak.Controllers.BaseController`2">
+        <member name="T:Zadatak.Attributes.DefineScopeType">
+            <summary>
+            Attribute for defining which services to add
+            </summary>
+            <seealso cref="T:System.Attribute" />
+        </member>
+        <member name="T:Zadatak.Attributes.NoUnitOfWork">
             <summary>
             
+            </summary>
+            <seealso cref="T:System.Attribute" />
+        </member>
+        <member name="T:Zadatak.Controllers.BaseController`2">
+            <summary>
+            Base Controller
             </summary>
             <typeparam name="TEntity">The type of the entity.</typeparam>
             <typeparam name="TDto">The type of the dto.</typeparam>
@@ -26,7 +38,6 @@
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
-            <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.BaseController`2.GetAll">
             <summary>
@@ -39,9 +50,8 @@
             Gets the specified identifier.
             </summary>
             <param name="id">The identifier.</param>
-            <returns>
-            
-            </returns>
+            <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Controllers.BaseController`2.Post(`1)">
             <summary>
@@ -83,19 +93,20 @@
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.#ctor(AutoMapper.IMapper,Zadatak.Interfaces.IDeviceRepository,Zadatak.Interfaces.IEmployeeRepository,Zadatak.Interfaces.IUsageRepository)">
             <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController" /> class.
+            Initializes a new instance of the <see cref="T:Zadatak.Controllers.DeviceController"/> class.
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
             <param name="employeeRepository">The employee repository.</param>
             <param name="usageRepository">The usage repository.</param>
-            <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.GetDeviceUseHistory(System.Int64)">
             <summary>
             Gets the device use history.
             </summary>
+            <param name="id">The identifier.</param>
             <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Device doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.GetDeviceCurrentInfo(System.Int64)">
             <summary>
@@ -103,6 +114,7 @@
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Device doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Controllers.DeviceController.Post(Zadatak.DTOs.Device.DeviceDto)">
             <summary>
@@ -143,7 +155,6 @@
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
-            <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.EmployeeController.GetEmployeeUseHistory(System.Int64)">
             <summary>
@@ -151,6 +162,7 @@
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Employee doesn't exist</exception>
         </member>
         <member name="T:Zadatak.Controllers.OfficeController">
             <summary>
@@ -164,16 +176,14 @@
             </summary>
             <param name="mapper">The mapper.</param>
             <param name="repository">The repository.</param>
-            <param name="unitOfWork">The unit of work.</param>
         </member>
         <member name="M:Zadatak.Controllers.OfficeController.GetOfficeEmployees(System.String)">
             <summary>
             Gets the office employees.
             </summary>
             <param name="description">The description.</param>
-            <returns>
-            400 error code if office doesn't exist, 200 with message: "Office doesn't have any..." if office empty or List of employees in office.
-            </returns>
+            <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Office doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Controllers.OfficeController.DeleteJustEmployees(System.Int64)">
             <summary>
@@ -359,37 +369,143 @@
             To.
             </value>
         </member>
-        <member name="T:Zadatak.UnitOfWork.UnitOfWork">
+        <member name="T:Zadatak.Exceptions.CustomException">
             <summary>
-            Unit of Work
+            Custom exception
             </summary>
-            <seealso cref="T:Zadatak.Interfaces.IUnitOfWork" />
+            <seealso cref="T:System.Exception" />
         </member>
-        <member name="M:Zadatak.UnitOfWork.UnitOfWork.#ctor(Zadatak.Models.WorkContext)">
+        <member name="M:Zadatak.Exceptions.CustomException.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Zadatak.UnitOfWork.UnitOfWork"/> class.
+            Initializes a new instance of the <see cref="T:Zadatak.Exceptions.CustomException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:Zadatak.Exceptions.CustomException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Exceptions.CustomException"/> class.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
+        </member>
+        <member name="T:Zadatak.Exceptions.ExceptionHandling">
+            <summary>
+            Format in which the result will be shown
+            </summary>
+        </member>
+        <member name="P:Zadatak.Exceptions.ExceptionHandling.Data">
+            <summary>
+            Gets or sets the data.
+            </summary>
+            <value>
+            The data.
+            </value>
+        </member>
+        <member name="P:Zadatak.Exceptions.ExceptionHandling.IsError">
+            <summary>
+            Gets or sets a value indicating whether this instance is error.
+            </summary>
+            <value>
+              <c>true</c> if this instance is error; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Zadatak.Exceptions.ExceptionHandling.Exception">
+            <summary>
+            Gets or sets the exception.
+            </summary>
+            <value>
+            The exception.
+            </value>
+        </member>
+        <member name="T:Zadatak.Exceptions.MyException">
+            <summary>
+            Format of exception in response
+            </summary>
+        </member>
+        <member name="P:Zadatak.Exceptions.MyException.Message">
+            <summary>
+            Gets or sets the message.
+            </summary>
+            <value>
+            The message.
+            </value>
+        </member>
+        <member name="P:Zadatak.Exceptions.MyException.Exception">
+            <summary>
+            Gets or sets the exception.
+            </summary>
+            <value>
+            The exception.
+            </value>
+        </member>
+        <member name="P:Zadatak.Exceptions.MyException.StackTrace">
+            <summary>
+            Gets or sets the stack trace.
+            </summary>
+            <value>
+            The stack trace.
+            </value>
+        </member>
+        <member name="T:Zadatak.Extensions.GenericClassesExtension">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Zadatak.Filters.MyExceptionFilter">
+            <summary>
+            Handle exceptions
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Filters.IExceptionFilter" />
+        </member>
+        <member name="M:Zadatak.Filters.MyExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary>
+            Called after an action has thrown an <see cref="T:System.Exception" />.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ExceptionContext" />.</param>
+        </member>
+        <member name="T:Zadatak.Filters.MyReturnFilter">
+            <summary>
+            Modify the response of actions
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Filters.IResultFilter" />
+        </member>
+        <member name="M:Zadatak.Filters.MyReturnFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">
+            <summary>
+            Called before the action result executes.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext" />.</param>
+        </member>
+        <member name="M:Zadatak.Filters.MyReturnFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)">
+            <summary>
+            Called after the action result executes.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext" />.</param>
+        </member>
+        <member name="T:Zadatak.Filters.UnitOfWorkFilter">
+            <summary>
+            Unit of work to handle transactions
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Filters.IActionFilter" />
+        </member>
+        <member name="M:Zadatak.Filters.UnitOfWorkFilter.#ctor(Zadatak.Models.WorkContext,Zadatak.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Filters.UnitOfWorkFilter"/> class.
             </summary>
             <param name="context">The context.</param>
+            <param name="unitOfWork">The unit of work.</param>
         </member>
-        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Start">
+        <member name="M:Zadatak.Filters.UnitOfWorkFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
-            Starts this instance.
+            Called before the action executes, after model binding is complete.
             </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext" />.</param>
         </member>
-        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Save">
+        <member name="M:Zadatak.Filters.UnitOfWorkFilter.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
             <summary>
-            Saves this instance.
+            Called after the action executes, before the action result.
             </summary>
-        </member>
-        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Commit">
-            <summary>
-            Commits this instance.
-            </summary>
-        </member>
-        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Dispose">
-            <summary>
-            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext" />.</param>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Cannot delete</exception>
         </member>
         <member name="T:Zadatak.Interfaces.IDeviceRepository">
             <summary>
@@ -419,6 +535,19 @@
             </summary>
             <param name="id">The identifier.</param>
             <param name="dto">The dto.</param>
+        </member>
+        <member name="M:Zadatak.Interfaces.IDeviceRepository.Add(Zadatak.DTOs.Device.DeviceDto)">
+            <summary>
+            Adds the specified dto.
+            </summary>
+            <param name="dto">The dto.</param>
+        </member>
+        <member name="M:Zadatak.Interfaces.IDeviceRepository.GetDeviceByName(System.String)">
+            <summary>
+            Gets the name of the device by.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
         </member>
         <member name="T:Zadatak.Interfaces.IEmployeeRepository">
             <summary>
@@ -502,10 +631,17 @@
             Saves this instance.
             </summary>
         </member>
-        <member name="M:Zadatak.Interfaces.IUnitOfWork.Start">
+        <member name="M:Zadatak.Interfaces.IUnitOfWork.Start(System.Boolean)">
             <summary>
             Starts this instance.
             </summary>
+            <param name="disable"></param>
+        </member>
+        <member name="M:Zadatak.Interfaces.IUnitOfWork.GetReadOnly">
+            <summary>
+            Gets the read only.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Zadatak.Interfaces.IUnitOfWork.Commit">
             <summary>
@@ -520,6 +656,12 @@
             <seealso>
                  <cref>Repositories.IRepository{Models.DeviceUsage}</cref>
              </seealso>
+        </member>
+        <member name="M:Zadatak.Interfaces.IUsageRepository.Add(Zadatak.Models.Device)">
+            <summary>
+            Adds the specified device.
+            </summary>
+            <param name="device">The device.</param>
         </member>
         <member name="T:Zadatak.Migrations.Prva">
             <summary>
@@ -894,19 +1036,33 @@
             </summary>
             <param name="context">The context.</param>
         </member>
+        <member name="M:Zadatak.Repositories.DeviceRepository.GetAll">
+            <summary>
+            Gets all.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceUseHistory(System.Int64)">
             <summary>
             Gets the device use history.
             </summary>
             <param name="id">The identifier.</param>
             <returns></returns>
-            <exception cref="T:System.Exception">Device doesn't exist</exception>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceCurrentInfo(System.Int64)">
             <summary>
             Gets the device current information.
             </summary>
             <param name="id">The identifier.</param>
+            <returns></returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Doesn't exist</exception>
+        </member>
+        <member name="M:Zadatak.Repositories.DeviceRepository.GetDeviceByName(System.String)">
+            <summary>
+            Gets the name of the device by.
+            </summary>
+            <param name="name">The name.</param>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Repositories.DeviceRepository.Add(Zadatak.DTOs.Device.DeviceDto)">
@@ -938,11 +1094,17 @@
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="M:Zadatak.Repositories.EmployeeRepository.GetOffice(System.String)">
+        <member name="M:Zadatak.Repositories.EmployeeRepository.Get(System.Int64)">
             <summary>
-            Gets the office.
+            Gets the specified identifier.
             </summary>
-            <param name="description">The description.</param>
+            <param name="id">The identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.Repositories.EmployeeRepository.GetAll">
+            <summary>
+            Gets all.
+            </summary>
             <returns></returns>
         </member>
         <member name="M:Zadatak.Repositories.EmployeeRepository.GetEmployeeUseHistory(System.Int64)">
@@ -969,7 +1131,7 @@
         </member>
         <member name="M:Zadatak.Repositories.OfficeRepository.GetOffice(System.String)">
             <summary>
-            Gets the office.
+            Gets the office with given name
             </summary>
             <param name="description">The description.</param>
             <returns></returns>
@@ -999,14 +1161,19 @@
             <summary>
             Gets all.
             </summary>
-            <returns></returns>
+            <returns>
+            List of all entities.
+            </returns>
         </member>
         <member name="M:Zadatak.Repositories.Repository`1.Get(System.Int64)">
             <summary>
             Gets the specified identifier.
             </summary>
             <param name="id">The identifier.</param>
-            <returns></returns>
+            <returns>
+            Entity with given Id.
+            </returns>
+            <exception cref="T:Zadatak.Exceptions.CustomException">Doesn't exist</exception>
         </member>
         <member name="M:Zadatak.Repositories.Repository`1.Add(`0)">
             <summary>
@@ -1048,11 +1215,17 @@
             </summary>
             <param name="context">The context.</param>
         </member>
+        <member name="M:Zadatak.Repositories.UsageRepository.GetAll">
+            <summary>
+            Gets all.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Zadatak.Repositories.UsageRepository.Add(Zadatak.Models.Device)">
             <summary>
-            Adds the specified dto.
+            Adds the specified device.
             </summary>
-            <param name="dto">The dto.</param>
+            <param name="device">The device.</param>
         </member>
         <member name="M:Zadatak.Repositories.UsageRepository.Update(Zadatak.Models.DeviceUsage)">
             <summary>
@@ -1091,6 +1264,45 @@
             </summary>
             <param name="app">The application.</param>
             <param name="env">The env.</param>
+        </member>
+        <member name="T:Zadatak.UnitOfWork.UnitOfWork">
+            <summary>
+            Unit of Work
+            </summary>
+            <seealso cref="T:Zadatak.Interfaces.IUnitOfWork" />
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.#ctor(Zadatak.Models.WorkContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.UnitOfWork.UnitOfWork"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.GetReadOnly">
+            <summary>
+            Gets the read only.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Start(System.Boolean)">
+            <summary>
+            Starts this instance.
+            </summary>
+            <param name="disable"></param>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Save">
+            <summary>
+            Saves this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Commit">
+            <summary>
+            Commits this instance.
+            </summary>
+        </member>
+        <member name="M:Zadatak.UnitOfWork.UnitOfWork.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
         </member>
     </members>
 </doc>

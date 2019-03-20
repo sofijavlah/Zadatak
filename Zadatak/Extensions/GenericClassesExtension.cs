@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Zadatak.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GenericClassesExtension
     {
 

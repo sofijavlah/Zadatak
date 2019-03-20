@@ -9,12 +9,12 @@ using Zadatak.Models;
 
 namespace Zadatak.Repositories
 {
-    [GenericClass]
     /// <summary>
     /// Generic Repository
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    /// <seealso cref="IRepository{TEntity}" />
+    /// <seealso cref="Zadatak.Interfaces.IRepository{TEntity}" />
+    [DefineScopeType]
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         /// <summary>
@@ -34,22 +34,27 @@ namespace Zadatak.Repositories
             Context = context;
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets all.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// List of all entities.
+        /// </returns>
+        [NoUnitOfWork]
         public virtual IEnumerable<TEntity> GetAll()
         {
             return Context.Set<TEntity>().ToList();
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// Entity with given Id.
+        /// </returns>
+        /// <exception cref="CustomException">Doesn't exist</exception>
+        [NoUnitOfWork]
         public virtual TEntity Get(long id)
         {
             var entity = Context.Set<TEntity>().Find(id);

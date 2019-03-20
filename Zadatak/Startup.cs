@@ -11,7 +11,7 @@ using Zadatak.Filters;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 using Zadatak.Repositories;
-using Zadatak.UnitOfWork;
+using Zadatak.Services;
 
 namespace Zadatak
 {
@@ -44,41 +44,24 @@ namespace Zadatak
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(UnitOfWorkFilter));
-                options.Filters.Add(typeof(MyReturnFilter));
-                options.Filters.Add(typeof(MyExceptionFilter));
+            //MVC AND FILTERS
+            services.AddMvcAndFilters();
 
+            //DI
+            services.AddDependency();
 
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
             //SWAGGER
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info {Title = "Zadatak", Version = "v1"});
+                c.SwaggerDoc("v1", new Info { Title = "Zadatak", Version = "v1" });
 
             });
 
             //DB
             services.AddDbContext<WorkContext>(opts =>opts.UseSqlServer(Configuration ["ConnectionString:WorkDB"]));
 
-            //UOF
-            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
-
             //MAPPER
             services.AddAutoMapper();
-
-            //REPOS
-
-            
-
-
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IOfficeRepository, OfficeRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<IDeviceRepository, DeviceRepository>();
-            services.AddScoped<IUsageRepository, UsageRepository>();
 
         }
 

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.Interfaces;
 using Zadatak.Models;
@@ -13,6 +16,7 @@ namespace Zadatak.Repositories
     ///     <cref>Repositories.Repository{Models.DeviceUsage}</cref>
     /// </seealso>
     /// <seealso cref="Zadatak.Interfaces.IUsageRepository" />
+    [DefineScopeType]
     public class UsageRepository : Repository<DeviceUsage>, IUsageRepository
     {
         /// <summary>
@@ -24,9 +28,21 @@ namespace Zadatak.Repositories
         }
 
         /// <summary>
-        /// Adds the specified dto.
+        /// Gets all.
         /// </summary>
-        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
+        [NoUnitOfWork]
+        public override IEnumerable<DeviceUsage> GetAll()
+        {
+            var usages = Context.DeviceUsages.Include(x => x.Employee).Include(x => x.Device).ToList();
+
+            return usages;
+        }
+
+        /// <summary>
+        /// Adds the specified device.
+        /// </summary>
+        /// <param name="device">The device.</param>
         public void Add(Device device)
         {
             Context.DeviceUsages.Add(new DeviceUsage

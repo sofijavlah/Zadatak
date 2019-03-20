@@ -32,8 +32,17 @@ namespace Zadatak.Interfaces
         /// <param name="dto">The dto.</param>
         void ChangeDeviceNameOrUser(long id, DeviceDto dto);
 
+        /// <summary>
+        /// Adds the specified dto.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
         void Add(DeviceDto dto);
 
+        /// <summary>
+        /// Gets the name of the device by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         Device GetDeviceByName(string name);
     }
 }

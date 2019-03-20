@@ -33,7 +33,6 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
-        /// <param name="unitOfWork">The unit of work.</param>
         public EmployeeController(IMapper mapper, IEmployeeRepository repository)
             : base(mapper, repository)
         {
@@ -41,12 +40,13 @@ namespace Zadatak.Controllers
             _repository = repository;
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets the employee use history.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
+        /// <exception cref="CustomException">Employee doesn't exist</exception>
+        [NoUnitOfWork]
         [HttpGet]
         public IActionResult GetEmployeeUseHistory(long id)
         {

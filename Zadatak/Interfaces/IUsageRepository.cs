@@ -12,6 +12,10 @@ namespace Zadatak.Interfaces
     /// </seealso>
     public interface IUsageRepository : IRepository<DeviceUsage>
     {
+        /// <summary>
+        /// Adds the specified device.
+        /// </summary>
+        /// <param name="device">The device.</param>
         void Add(Device device);
     }
 }

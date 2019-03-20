@@ -19,6 +19,10 @@ namespace Zadatak.Interfaces
         /// <param name="disable"></param>
         void Start(bool disable);
 
+        /// <summary>
+        /// Gets the read only.
+        /// </summary>
+        /// <returns></returns>
         bool GetReadOnly();
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Storage;
+using Zadatak.Attributes;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -9,6 +10,7 @@ namespace Zadatak.UnitOfWork
     /// Unit of Work
     /// </summary>
     /// <seealso cref="Zadatak.Interfaces.IUnitOfWork" />
+    [DefineScopeType]
     public class UnitOfWork : IUnitOfWork
     {
         private readonly WorkContext _context;
@@ -25,6 +27,10 @@ namespace Zadatak.UnitOfWork
             _context = context;
         }
 
+        /// <summary>
+        /// Gets the read only.
+        /// </summary>
+        /// <returns></returns>
         public bool GetReadOnly()
         {
             return isReadOnly;

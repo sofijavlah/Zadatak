@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Zadatak.Attributes;
@@ -16,6 +17,7 @@ namespace Zadatak.Repositories
     ///     <cref>Repositories.Repository{Models.Device}</cref>
     /// </seealso>
     /// <seealso cref="Zadatak.Interfaces.IDeviceRepository" />
+    [DefineScopeType]
     public class DeviceRepository : Repository<Device>, IDeviceRepository
     {
         /// <summary>
@@ -27,13 +29,25 @@ namespace Zadatak.Repositories
         {
         }
 
+        /// <summary>
+        /// Gets all.
+        /// </summary>
+        /// <returns></returns>
         [NoUnitOfWork]
+        public override IEnumerable<Device> GetAll()
+        {
+            var devices = Context.Devices.Include(x => x.Employee).ToList();
+
+            return devices;
+        }
+
         /// <summary>
         /// Gets the device use history.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        /// <exception cref="Exception">Device doesn't exist</exception>
+        /// <exception cref="CustomException">Doesn't exist</exception>
+        [NoUnitOfWork]
         public Device GetDeviceUseHistory(long id)
         {
             var device = Context.Devices.Include(x => x.UsageList).ThenInclude(x => x.Employee).FirstOrDefault(x => x.Id == id);
@@ -44,12 +58,13 @@ namespace Zadatak.Repositories
 
         }
 
-        [NoUnitOfWork]
         /// <summary>
         /// Gets the device current information.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
+        /// <exception cref="CustomException">Doesn't exist</exception>
+        [NoUnitOfWork]
         public Device GetDeviceCurrentInfo(long id)
         {
             var device = Context.Devices.Include(x => x.Employee).Include(x => x.UsageList)
@@ -60,6 +75,11 @@ namespace Zadatak.Repositories
             return device;
         }
 
+        /// <summary>
+        /// Gets the name of the device by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         [NoUnitOfWork]
         public Device GetDeviceByName(string name)
         {

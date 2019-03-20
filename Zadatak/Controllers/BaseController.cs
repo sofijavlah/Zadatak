@@ -10,9 +10,8 @@ using Zadatak.Interfaces;
 
 namespace Zadatak.Controllers
 {
-    [GenericClass]
     /// <summary>
-    /// 
+    /// Base Controller
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
     /// <typeparam name="TDto">The type of the dto.</typeparam>
@@ -30,25 +29,24 @@ namespace Zadatak.Controllers
         private readonly IMapper _mapper;
 
         private readonly IRepository<TEntity> _repository;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseController{TEntity, TDto}"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
-        /// <param name="unitOfWork">The unit of work.</param>
         public BaseController(IMapper mapper, IRepository<TEntity> repository)
         {
             _mapper = mapper;
             _repository = repository;
         }
 
-        [NoUnitOfWork]
-        // GET: api/Base
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
+        [NoUnitOfWork]
+        // GET: api/Base
         [HttpGet]
         public virtual IActionResult GetAll()
         {
@@ -56,15 +54,14 @@ namespace Zadatak.Controllers
             return Ok(entities);
         }
 
-        [NoUnitOfWork]
-        // GET: api/Base/5
         /// <summary>
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns>
-        /// 
-        /// </returns>
+        /// <returns></returns>
+        /// <exception cref="CustomException">Doesn't exist</exception>
+        [NoUnitOfWork]
+        // GET: api/Base/5
         [HttpGet]
         public virtual IActionResult Get(long id)
         {
