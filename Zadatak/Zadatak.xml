@@ -10,6 +10,40 @@
             </summary>
             <seealso cref="T:System.Attribute" />
         </member>
+        <member name="P:Zadatak.Attributes.DefineScopeType.Type">
+            <summary>
+            Gets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="M:Zadatak.Attributes.DefineScopeType.#ctor(Zadatak.Attributes.EnumScopeType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Zadatak.Attributes.DefineScopeType"/> class.
+            </summary>
+            <param name="type">The type.</param>
+        </member>
+        <member name="T:Zadatak.Attributes.EnumScopeType">
+            <summary>
+            Values for DefineScopeType attribute
+            </summary>
+        </member>
+        <member name="F:Zadatak.Attributes.EnumScopeType.Scoped">
+            <summary>
+            The scoped ype
+            </summary>
+        </member>
+        <member name="F:Zadatak.Attributes.EnumScopeType.Transient">
+            <summary>
+            The transient type
+            </summary>
+        </member>
+        <member name="F:Zadatak.Attributes.EnumScopeType.Singleton">
+            <summary>
+            The singleton type
+            </summary>
+        </member>
         <member name="T:Zadatak.Attributes.NoUnitOfWork">
             <summary>
             
@@ -163,6 +197,19 @@
             <param name="id">The identifier.</param>
             <returns></returns>
             <exception cref="T:Zadatak.Exceptions.CustomException">Employee doesn't exist</exception>
+        </member>
+        <member name="T:Zadatak.Controllers.ExpressionsController">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="M:Zadatak.Controllers.ExpressionsController.FilterInput(Zadatak.Expressions.QueryInfo)">
+            <summary>
+            Filters the input.
+            </summary>
+            <param name="querryInfo">The querry information.</param>
+            <returns></returns>
         </member>
         <member name="T:Zadatak.Controllers.OfficeController">
             <summary>
@@ -1232,6 +1279,17 @@
             Updates the specified device usage.
             </summary>
             <param name="deviceUsage">The device usage.</param>
+        </member>
+        <member name="T:Zadatak.Services.ServiceForFilters">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Zadatak.Services.ServiceForFilters.AddMvcAndFilters(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the MVC and filters.
+            </summary>
+            <param name="serviceCollection">The service collection.</param>
         </member>
         <member name="T:Zadatak.Startup">
             <summary>

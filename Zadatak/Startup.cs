@@ -50,19 +50,18 @@ namespace Zadatak
             //DI
             services.AddDependency();
 
+            //DB
+            services.AddDbContext<WorkContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:WorkDB"]));
+
+            //MAPPER
+            services.AddAutoMapper();
+
             //SWAGGER
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Zadatak", Version = "v1" });
 
             });
-
-            //DB
-            services.AddDbContext<WorkContext>(opts =>opts.UseSqlServer(Configuration ["ConnectionString:WorkDB"]));
-
-            //MAPPER
-            services.AddAutoMapper();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

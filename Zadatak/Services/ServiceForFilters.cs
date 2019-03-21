@@ -9,10 +9,17 @@ using Zadatak.Attributes;
 
 namespace Zadatak.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ServiceForFilters
     {
 
-        public static void AddFilters(this IServiceCollection serviceCollection)
+        /// <summary>
+        /// Adds the MVC and filters.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        public static void AddMvcAndFilters(this IServiceCollection serviceCollection)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
 

@@ -7,11 +7,21 @@ using Zadatak.Expressions;
 
 namespace Zadatak.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     public class ExpressionsController : ControllerBase
     {
+        /// <summary>
+        /// Filters the input.
+        /// </summary>
+        /// <param name="querryInfo">The querry information.</param>
+        /// <returns></returns>
         [HttpPost]
-        public IActionResult FilterInput(QueryInfo querryInfo)
+        public IActionResult QuerySmor(QueryInfo querryInfo)
         {
+
             return Ok();
         }
     }

@@ -67,7 +67,6 @@ namespace Zadatak.Repositories
             usage.To = DateTime.Now;
 
             Context.SaveChanges();
-
         }
     }
 }
