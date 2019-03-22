@@ -204,7 +204,7 @@
             </summary>
             <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
         </member>
-        <member name="M:Zadatak.Controllers.ExpressionsController.FilterInput(Zadatak.Expressions.QueryInfo)">
+        <member name="M:Zadatak.Controllers.ExpressionsController.QuerySmor(Zadatak.Expressions.QueryInfo)">
             <summary>
             Filters the input.
             </summary>

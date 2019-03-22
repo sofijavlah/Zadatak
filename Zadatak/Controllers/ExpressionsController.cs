@@ -22,6 +22,7 @@ namespace Zadatak.Controllers
         public IActionResult QuerySmor(QueryInfo querryInfo)
         {
 
+
             return Ok();
         }
     }

@@ -13,6 +13,6 @@ namespace Zadatak.Expressions
 
         public string Operator { get; set; }
 
-        public Object Value { get; set; }
+        public string Value { get; set; }
     }
 }

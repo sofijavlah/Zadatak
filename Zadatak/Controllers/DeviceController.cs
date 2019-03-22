@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.DTOs.Usage;
 using Zadatak.Exceptions;
+using Zadatak.Expressions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 
@@ -128,5 +131,15 @@ namespace Zadatak.Controllers
 
         }
 
+        [NoUnitOfWork]
+        [HttpPost]
+        public IActionResult GetQuerySmor(QueryInfo queryInfo)
+        {
+            var usages = _usageRepository.GetAll().AsQueryable().ToList();
+
+            var result = _usageRepository.GetSorted<DeviceUsage>(queryInfo, usages).ProjectTo<UsageDto>(_mapper.ConfigurationProvider);
+            
+            return Ok(result);
+        }
     }
 }
