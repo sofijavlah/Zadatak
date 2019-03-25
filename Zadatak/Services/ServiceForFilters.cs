@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Remotion.Linq.Clauses;
 using Zadatak.Attributes;
 
 namespace Zadatak.Services
@@ -14,7 +10,6 @@ namespace Zadatak.Services
     /// </summary>
     public static class ServiceForFilters
     {
-
         /// <summary>
         /// Adds the MVC and filters.
         /// </summary>

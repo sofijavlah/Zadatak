@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Zadatak.Attributes;
 using Zadatak.Exceptions;
 using Zadatak.Interfaces;

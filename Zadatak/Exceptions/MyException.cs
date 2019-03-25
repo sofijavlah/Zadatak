@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
-
-namespace Zadatak.Exceptions
+﻿namespace Zadatak.Exceptions
 {
     /// <summary>
     /// Format of exception in response

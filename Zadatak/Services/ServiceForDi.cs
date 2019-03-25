@@ -1,16 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using Zadatak.Attributes;
 
 namespace Zadatak.Services
 {
+    /// <summary>
+    /// Service that adds all dependencies in this project automatically.
+    /// </summary>
     public static class ServiceForDi
     {
+        /// <summary>
+        /// Adds all dependencies automatically.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
         public static void AddDependency(this IServiceCollection serviceCollection)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

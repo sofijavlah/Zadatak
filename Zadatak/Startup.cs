@@ -1,16 +1,11 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Zadatak.Filters;
-using Zadatak.Interfaces;
 using Zadatak.Models;
-using Zadatak.Repositories;
 using Zadatak.Services;
 
 namespace Zadatak

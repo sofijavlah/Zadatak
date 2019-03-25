@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
 using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.Exceptions;
-using Zadatak.Expressions;
 using Zadatak.Interfaces;
 using Zadatak.Models;
 

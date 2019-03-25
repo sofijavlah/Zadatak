@@ -24,12 +24,8 @@ namespace Zadatak.Filters
         /// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ExceptionContext" />.</param>
         public void OnException(ExceptionContext context)
         {
-            var _exceptionHandling = new ExceptionHandling();
-
-            _exceptionHandling.Data = null;
-
-            _exceptionHandling.IsError = true;
-
+            var _exceptionHandling = new ExceptionHandling {Data = null, IsError = true};
+            
             MyException ex = new MyException
             {
                 Message = context.Exception.Message,

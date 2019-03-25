@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Zadatak.Exceptions
+﻿namespace Zadatak.Exceptions
 {
     /// <summary>
     /// Format in which the result will be shown

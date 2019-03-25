@@ -12,7 +12,7 @@ namespace Zadatak.Models
         /// <summary>
         /// The ho
         /// </summary>
-        protected readonly IHostingEnvironment _ho;
+        protected readonly IHostingEnvironment Ho;
 
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Zadatak.Models
         public WorkContext(DbContextOptions<WorkContext> options, IHostingEnvironment ho)
             : base(options)
         {
-            _ho = ho;
+            Ho = ho;
         }
 
         /// <summary>

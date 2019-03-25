@@ -198,19 +198,6 @@
             <returns></returns>
             <exception cref="T:Zadatak.Exceptions.CustomException">Employee doesn't exist</exception>
         </member>
-        <member name="T:Zadatak.Controllers.ExpressionsController">
-            <summary>
-            
-            </summary>
-            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
-        </member>
-        <member name="M:Zadatak.Controllers.ExpressionsController.QuerySmor(Zadatak.Expressions.QueryInfo)">
-            <summary>
-            Filters the input.
-            </summary>
-            <param name="querryInfo">The querry information.</param>
-            <returns></returns>
-        </member>
         <member name="T:Zadatak.Controllers.OfficeController">
             <summary>
             

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using Zadatak.Attributes;
 using Zadatak.Interfaces;
 using Zadatak.Models;
@@ -15,7 +14,7 @@ namespace Zadatak.UnitOfWork
     {
         private readonly WorkContext _context;
 
-        private bool isReadOnly;
+        private bool _isReadOnly;
         private IDbContextTransaction _transaction;
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace Zadatak.UnitOfWork
         /// <returns></returns>
         public bool GetReadOnly()
         {
-            return isReadOnly;
+            return _isReadOnly;
         }
 
         /// <summary>
@@ -42,8 +41,8 @@ namespace Zadatak.UnitOfWork
         /// <param name="disable"></param>
         public void Start(bool disable)
         {
-            isReadOnly = disable;
-            if (isReadOnly) return; 
+            _isReadOnly = disable;
+            if (_isReadOnly) return; 
             _transaction = _context.Database.BeginTransaction();
         }
 
@@ -60,7 +59,7 @@ namespace Zadatak.UnitOfWork
         /// </summary>
         public void Commit()
         {
-            if (isReadOnly) return;
+            if (_isReadOnly) return;
             _transaction.Commit();
         }
 

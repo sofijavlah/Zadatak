@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Zadatak.Attributes;
 using Zadatak.DTOs.Device;
 using Zadatak.DTOs.Usage;
@@ -31,9 +28,7 @@ namespace Zadatak.Controllers
         /// The repository
         /// </summary>
         private readonly IDeviceRepository _repository;
-
-        private readonly IEmployeeRepository _employeeRepository;
-
+        
         private readonly IUsageRepository _usageRepository;
 
         /// <summary>
@@ -41,14 +36,12 @@ namespace Zadatak.Controllers
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="repository">The repository.</param>
-        /// <param name="employeeRepository">The employee repository.</param>
         /// <param name="usageRepository">The usage repository.</param>
-        public DeviceController(IMapper mapper, IDeviceRepository repository, IEmployeeRepository employeeRepository, IUsageRepository usageRepository) 
+        public DeviceController(IMapper mapper, IDeviceRepository repository, IUsageRepository usageRepository) 
             : base(mapper, repository)
         {
             _mapper = mapper;
             _repository = repository;
-            _employeeRepository = employeeRepository;
             _usageRepository = usageRepository;
         }
 
@@ -131,14 +124,19 @@ namespace Zadatak.Controllers
 
         }
 
+        /// <summary>
+        /// Gets the query smor.
+        /// </summary>
+        /// <param name="queryInfo">The query information.</param>
+        /// <returns></returns>
         [NoUnitOfWork]
         [HttpPost]
         public IActionResult GetQuerySmor(QueryInfo queryInfo)
         {
             var usages = _usageRepository.GetAll().AsQueryable().ToList();
 
-            var result = _usageRepository.GetSorted<DeviceUsage>(queryInfo, usages).ProjectTo<UsageDto>(_mapper.ConfigurationProvider);
-            
+            var result = queryInfo.GetSorted(queryInfo, usages).ProjectTo<UsageDto>(_mapper.ConfigurationProvider);
+
             return Ok(result);
         }
     }

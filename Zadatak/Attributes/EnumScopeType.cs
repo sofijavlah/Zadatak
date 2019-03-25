@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Zadatak.Attributes
+﻿namespace Zadatak.Attributes
 {
     /// <summary>
     /// Values for DefineScopeType attribute
